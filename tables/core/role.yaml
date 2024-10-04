@@ -34,10 +34,10 @@ table:   adm_user_role
 comments: Link between user and role
 columns:
 - id
-- adm_user.id          !    : Saite uz lietotāju
-- adm_role.id               : Saite uz lomu
-- date_from            !    : Derīguma termiņš no
-- date_to                   : Derīguma termiņš līdz
+- adm_user.id          !    : Link to user
+- adm_role.id               : Link to role
+- date_from            !    : Validity period from
+- date_to                   : Validity period to
 idx:
 - adm_user_id
 - adm_role_id

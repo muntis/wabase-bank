@@ -95,10 +95,10 @@ create table adm_user_role(
   date_to date
 );
 comment on table adm_user_role is 'Link between user and role';
-comment on column adm_user_role.adm_user_id is 'Saite uz lietotāju';
-comment on column adm_user_role.adm_role_id is 'Saite uz lomu';
-comment on column adm_user_role.date_from is 'Derīguma termiņš no';
-comment on column adm_user_role.date_to is 'Derīguma termiņš līdz';
+comment on column adm_user_role.adm_user_id is 'Link to user';
+comment on column adm_user_role.adm_role_id is 'Link to role';
+comment on column adm_user_role.date_from is 'Validity period from';
+comment on column adm_user_role.date_to is 'Validity period to';
 
 create table audit(
   id bigint,
