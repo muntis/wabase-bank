@@ -1,0 +1,26 @@
+.vscode
+.idea/
+.bsp/
+/attachments/
+/idea/
+/target/
+/lib_managed/
+/src_managed/
+/bin/
+/lib/
+/tmp
+
+/project/target
+/project/project
+
+# scalatest reports
+/report/
+/it-report/
+
+\\
+/release/
+/notes.txt
+
+yarn.lock
+
+/.env

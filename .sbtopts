@@ -1,0 +1,4 @@
+-J-Xmx3G
+-J-Xms1G
+-J--add-opens=java.base/java.util=ALL-UNNAMED
+-J--add-opens=java.base/java.lang=ALL-UNNAMED

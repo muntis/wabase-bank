@@ -1,0 +1,7 @@
+path: data/classifier_item_choice
+params:
+  code: TEST
+response:
+  - name: Test classifier item
+    code: TESTREC
+    cla_code: TEST

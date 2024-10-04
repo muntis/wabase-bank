@@ -1,0 +1,46 @@
+table:   adm_role
+comments: System roles
+columns:
+- id
+- name              ! 100
+- code                100
+- notes               250
+- is_system         ! boolean = false
+uk:
+- code
+- name
+
+table:  adm_permission
+comments: Atomic permissions - edit, delete specific data
+columns:
+- id
+- code                 ! 100
+- comment                250
+
+table:   adm_role_permission
+comments: Permissions within role
+columns:
+- id
+- adm_role.id            !    : Link to role
+- adm_permission.id      !    : Link to permission
+idx:
+- adm_role_id
+- adm_permission_id
+refs:
+- adm_role_id -> adm_role(id) on delete cascade
+- adm_permission_id -> adm_permission(id) on delete cascade
+
+table:   adm_user_role
+comments: Link between user and role
+columns:
+- id
+- adm_user.id          !    : Saite uz lietotāju
+- adm_role.id               : Saite uz lomu
+- date_from            !    : Derīguma termiņš no
+- date_to                   : Derīguma termiņš līdz
+idx:
+- adm_user_id
+- adm_role_id
+refs:
+- adm_role_id -> adm_role(id) on delete cascade
+- adm_user_id -> adm_user(id) on delete cascade

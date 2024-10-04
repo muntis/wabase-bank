@@ -1,0 +1,6 @@
+path: data/classifier_item/{{record_id}}
+response:
+  template: classifier_item.yaml
+  id: <- record_id
+  code: <- newCode
+

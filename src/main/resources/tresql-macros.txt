@@ -1,0 +1,17 @@
+include /querease-macros.txt
+
+
+has_role_user(userId::long, roleName::string)::boolean =
+    exists(
+      adm_user_role ur/adm_role_permission rc!/adm_permission p[
+        p.code = $roleName &
+        ur.adm_user_id = $userId &
+        coalesce(ur.date_from, current_date) <= current_date &
+        coalesce(ur.date_to, current_date) >= current_date])
+
+has_role(roleName::string)::boolean =
+    has_role_user(:current_user_id, $roleName)
+
+ts_query(field::string, queryString::string)::boolean =
+    `$field @@ (select to_tsquery(string_agg(u, ' & ')) from (select unnest(tsvector_to_array(to_tsvector('simple', $queryString))) || ':*' as  u) as u)`
+

@@ -1,0 +1,23 @@
+name: has_role_helper
+table: adm_user u
+api:
+fields:
+- has_role = has_role(:role)
+filter:
+- u.id = :current_user_id
+- u.status = 'Active'
+
+name: roles_helper
+table:
+api:
+joins:
+- (adm_user u
+   [u.id = ur.adm_user_id] adm_user_role ur
+   [ur.adm_role_id = rc.adm_role_id] adm_role_permission rc
+   [rc.adm_permission_id = p.id] adm_permission p[
+     u.id = :current_user_id &
+     u.status = 'Active' &
+     ur.date_from <= current_date &
+     coalesce(ur.date_to, current_date) >= current_date]#{p.code role}) r_
+fields:
+- role

@@ -1,0 +1,44 @@
+name: classifier_item
+table: classifier_item i
+api: manage_classifiers get, manage_classifiers save, manage_classifiers delete
+joins:
+  - i/ classifier classifier
+  - classifier / classifier? parentc
+  - i [i.parent_id = parent.id] classifier_item? parent
+fields:
+  - id
+  - code
+  - name
+  - longname
+  - code_sort
+  - date_from
+  - date_to
+  - notes
+  - parent.name
+  - parent.code
+  - classifier.name
+  - classifier.code
+
+
+
+name: classifier_item_choice
+table: classifier_item i
+api: logged_in_user list
+limit: 9999
+joins:
+  - i/classifier k
+fields:
+  - id
+  - code
+  - name = i.name || ''
+  - cla_code = k.code
+  - code_sort = i.code_sort
+filter:
+  - i.name || '' %~~~% :name?
+  - k.code = :code?
+  - coalesce(i.date_from, current_date) <= current_date
+  - coalesce(i.date_to, current_date) >= current_date
+order:
+  - i.code_sort
+  - i.code
+  - i.name

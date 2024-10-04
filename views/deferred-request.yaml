@@ -1,0 +1,13 @@
+name: deferred_request_list
+table:   deferred_request
+api: logged_in_user list
+fields:
+  - username
+  - priority
+  - request_time
+  - status
+  - request_hash
+  - response_time
+filter:
+  - username = sql(':current_user_id::text')
+  - request_hash

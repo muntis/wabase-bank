@@ -1,0 +1,67 @@
+services:
+  psql:
+    build:
+      context: .
+      dockerfile: docker-images/00-postgres.dockerfile_archive
+    ports:
+      - "5432:5432"
+    expose:
+      - ${POSTGRES_PORT}
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD-SHELL",  "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db/00-create-liquibase-schema.sql:/docker-entrypoint-initdb.d/00-init-liquibase.sql
+  liquibase:
+    build:
+      context: .
+      dockerfile: docker-images/01-liquibase.dockerfile
+    depends_on:
+      psql:
+        condition: service_healthy
+    volumes:
+      - ./db:/liquibase/changelog/
+    env_file:
+      - .env
+  instance-api:
+    build:
+      context: "github.com/sbt/docker-sbt.git"
+      dockerfile: "eclipse-temurin/Dockerfile"
+      args:
+        BASE_IMAGE_TAG: "17.0.4.1_1-jdk"
+        SBT_VERSION: "1.8.0"
+        SCALA_VERSION: "2.13.10"
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    ports:
+      - "8090:8090"
+    volumes:
+      - .:/app
+      - sbt_cache:/home/sbtuser/.sbt
+      - coursier_cache:/home/sbtuser/.cache
+      - root_sbt_cache:/root/.sbt
+      - root_coursier_cache:/root/.cache
+    working_dir: /app
+    command: ["sbt", "-J-Xmx2G", "clean", "~reStart"]
+    depends_on:
+      liquibase:
+        condition: service_completed_successfully
+    env_file:
+      - .env
+volumes:
+  sbt_cache:
+  coursier_cache:
+  root_sbt_cache:
+  root_coursier_cache:
+
+#  instance-web:
+#    image: node:16-alpine
+#    expose:
+#      - 5173
+#    volumes:
+#      - ./web:/app
+#    command: ["sh", "-c", "npm i && npm run dev"]

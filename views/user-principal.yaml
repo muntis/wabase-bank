@@ -1,0 +1,14 @@
+name: user_principal
+api:
+table: adm_user u
+fields:
+  - id
+  - pk
+  - name
+  - surname
+  - email
+  - full_name = u.name || ' ' || u.surname
+  - status
+filter:
+  - if_defined(:email, lower(u.email) = lower(:email))
+  - u.status = 'Active'

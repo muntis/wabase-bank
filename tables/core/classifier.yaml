@@ -1,0 +1,30 @@
+table: classifier
+columns:
+- id
+- code                  !
+- name                  !
+- notes               250
+- is_hierarchical       !               = false
+- is_active             !               = true
+- parent.id              classifier.id
+idx:
+- is_active
+- code
+
+table: classifier_item
+columns:
+- id
+- parent.id              classifier_item.id
+- classifier.id
+- code
+- name
+- date_from
+- date_to
+- notes               2000
+- longname
+- code_sort
+- code_postdoc
+idx:
+- classifier_id
+- code
+- parent_id

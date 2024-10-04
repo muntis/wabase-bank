@@ -1,0 +1,30 @@
+version: "3.4"
+services:
+  db:
+    container_name: bank-db-${BRANCH}
+    image: FIXME
+    healthcheck:
+      test: pg_isready -U bank -h 0.0.0.0 && test -f /tmp/bank-db-is-ready || exit 1
+      start_period: 60s
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+    env_file:
+      - .env
+  java:
+    container_name: bank-java-docker-${BRANCH}
+    image: FIXME
+    ports:
+      - 8091:8091
+    healthcheck:
+      test: ./health-check.sh
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condiftion: service_healthy

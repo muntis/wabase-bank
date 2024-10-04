@@ -1,0 +1,26 @@
+table: client
+comments: Bank client data
+columns:
+  - id
+  - name                             : Client name
+  - address                          : Client address
+  - phone                            : Client phone
+  - email                            : Client email
+
+table: account
+comments: Bank account data
+columns:
+  - id
+  - client.id                      ! : Client id
+  - balance               ! currency : Account balance
+  - currency                       ! : Account currency
+  - type                             : Account type
+
+table: account_transaction
+comments: Money transfer transaction
+columns:
+  - id
+  - from_account.id     ! account.id: From account id
+  - to_account.id       ! account.id : To account id
+  - amount                ! currency : Transaction amount
+  - currency                       ! : Transaction currency

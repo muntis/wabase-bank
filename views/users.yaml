@@ -1,0 +1,27 @@
+
+
+
+name: user_list
+table: adm_user l
+api: public list, public count
+comments: Users list
+fields:
+- id
+- name:
+  - sortable: true
+  - Name
+- surname:
+  - sortable: true
+  - Surname
+- phone:
+  - sortable: true
+  - Phone
+- status:
+  - sortable: true
+  - Status
+- email:
+  - sortable: true
+  - E-mail
+order:
+- surname, name, ~status
+

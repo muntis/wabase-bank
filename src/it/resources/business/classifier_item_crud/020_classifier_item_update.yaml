@@ -1,0 +1,8 @@
+path: data/classifier_item/{{record_id}}
+method: PUT
+request:
+  template: classifier_item.yaml
+#  id: <- record_id
+  code: <- randomString(10) -> newCode
+merge_response: true
+

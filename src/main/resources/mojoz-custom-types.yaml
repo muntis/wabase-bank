@@ -1,0 +1,23 @@
+type:       json
+xsd name:   string
+scala name: String
+yaml:
+  - json
+sql:
+  - jsonb
+
+type:       tsvector
+xsd name:   string
+scala name: String
+yaml:
+  - tsvector
+sql:
+  - tsvector
+
+type:       currency
+xsd name:   decimal
+scala name: BigDecimal
+yaml:
+  - euro
+sql:
+  - numeric(12, 2)

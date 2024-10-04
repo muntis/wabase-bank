@@ -1,0 +1,18 @@
+table: audit
+comments: Audit logs for user actions
+columns:
+  - id
+  - time                              ! dateTime = now() : Record creation time
+  - action                            ! (login logout create save remove open start end) : Action type
+  - source                            : Source of the action, PORTAL, API, etc.
+  - status                            ! 8 (success error) : Action status
+  - entity                            : View name
+  - entity_id                         : View ID
+  - vards                             : User name
+  - uzvards                           : User surname
+  - adm_user_id                       : User ID
+  - epasts                            : User email
+  - ip_address                        : User IP address
+  - user_agent                        : User agent
+  - error_data
+  - json_data

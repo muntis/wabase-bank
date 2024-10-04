@@ -1,0 +1,44 @@
+table:  adm_user
+columns:
+- id
+- email
+- notes                     250
+- passwd                    256
+- text
+- name                      !
+- surname                   !
+- phone
+- position
+- pk                        12
+- failed_login_attempts     ! int = 0
+- password_expiration_date  ! date
+- last_login_time
+- last_login_ip
+- last_failed_login_time
+- last_failed_login_success_ip
+- status                    ! (Active Inactive Blocked)
+- activation_code           256
+- is_code_used              boolean = false
+uk:
+  - email
+  - pk
+
+table: adm_password_history
+columns:
+- id
+- adm_user.id               !
+- passwd                    ! 256
+- change_time
+idx:
+- adm_user_id
+refs:
+- adm_user_id -> adm_user(id) on delete cascade
+
+table: adm_user_history
+columns:
+- id
+- adm_user.id     !
+- date_from           ! date = now()
+- name
+- surname
+- pk                 12

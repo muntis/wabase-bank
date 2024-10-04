@@ -1,0 +1,4 @@
+path: data/classifier_item/{{record_id}}
+method: DELETE
+error: 404 Not Found
+

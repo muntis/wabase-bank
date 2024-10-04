@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 202209010000
+      author: Initial
+      changes:
+        - sqlFile:
+            path: ./00-initial/00-nuke-schema.sql
+            splitStatements: false
+        - sqlFile:
+            path: ./00-initial/01-schema.sql
+            splitStatements: false
+        - sqlFile:
+            path: ./00-initial/02-sequences.sql
+            splitStatements: false
+        - sqlFile:
+            path: ./00-initial/03-functions.sql
+            splitStatements: false
+        - sqlFile:
+            path: ./00-initial/04-roles.sql
+            splitStatements: false
+        - sqlFile:
+            path: ./00-initial/09-test-data.sql
+            splitStatements: false
+

@@ -1,0 +1,7 @@
+path: data/classifier_item
+method: POST
+request:
+  template: classifier_item.yaml
+merge_response: true
+response:
+  id: -> record_id
