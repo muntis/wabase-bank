@@ -17,7 +17,7 @@ object App
     with BankAudit[user_principal]
     with BankDbAccess {
 
-  implicit val defaultCP = DEFAULT_CP
+  implicit val defaultCP: PoolName = DEFAULT_CP
   protected def initQuerease: org.wabase.AppQuerease = BankQuerease
 
   override def toAuditableMap(user: user_principal): Map[String, Any] = Map(

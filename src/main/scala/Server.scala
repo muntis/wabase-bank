@@ -2,16 +2,12 @@ package uniso.app
 
 import akka.event.Logging
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.marshallers.xml.ScalaXmlSupport._
-import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.directives.DebuggingDirectives
 import org.wabase.{Loggable, config}
 
 import scala.util._
-import scala.concurrent._
 import scala.concurrent.duration._
 
-import java.util.Locale
 
 object AppServer extends scala.App with Loggable {
 

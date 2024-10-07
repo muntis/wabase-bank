@@ -3,11 +3,11 @@ val akkaV = "2.6.21"
 val wabaseVersion = "7.0.0-RC11-SNAPSHOT"
 val jacksonVersion = "2.14.2"
 val swaggerVersion = "2.2.10"
-val alpakkaVersion = "4.0.0"  // Ensure Apache-2.0 license
+//val alpakkaVersion = "4.0.0"  // Ensure Apache-2.0 license
 
 name := "Wabase Sample Bank"
 version := "0.1"
-scalaVersion := "2.13.14"
+scalaVersion := "3.5.1"
 
 
 libraryDependencies ++= Seq(
@@ -18,18 +18,18 @@ libraryDependencies ++= Seq(
     "org.wabase"                  %% "wabase"                           % wabaseVersion,
     "org.wabase"                  %% "wabase"                           % wabaseVersion % "test" classifier "tests",
     "org.wabase"                  %% "wabase"                           % wabaseVersion % "it" classifier "tests",
-    "com.typesafe.akka"           %% "akka-http-xml"                    % akkaHttpV,
-    "com.lightbend.akka"          %% "akka-stream-alpakka-s3"           % alpakkaVersion,
+ //   "com.typesafe.akka"           %% "akka-http-xml"                    % akkaHttpV,
+ //   "com.lightbend.akka"          %% "akka-stream-alpakka-s3"           % alpakkaVersion,
     "io.pebbletemplates"          % "pebble"                            % "3.2.0",
     "org.xhtmlrenderer"           % "flying-saucer-pdf"                 % "9.1.22" excludeAll (
     ExclusionRule(organization = "org.bouncycastle")
     ),
-    "com.enragedginger"           %% "akka-quartz-scheduler"            % "1.8.2-akka-2.6.x" excludeAll (
+   /* "com.enragedginger"           %% "akka-quartz-scheduler"            % "1.8.2-akka-2.6.x" excludeAll (
     ExclusionRule(organization = "com.zaxxer", name = "HikariCP-java6")
-    ),
+    ),*/
     "ch.qos.logback"              % "logback-classic"                   %  "1.4.7",
-    "com.typesafe.akka"           %% "akka-testkit"                     % akkaV % "it,test",
-    "com.typesafe.akka"           %% "akka-http-testkit"                % akkaHttpV % "it,test",
+    "com.typesafe.akka"           %% "akka-testkit"                     % akkaV % "it,test" cross CrossVersion.for3Use2_13,
+    "com.typesafe.akka"           %% "akka-http-testkit"                % akkaHttpV % "it,test" cross CrossVersion.for3Use2_13,
     "org.scalatest"               %% "scalatest"                        % "3.2.11" % "it,test",
     "org.pegdown"                 % "pegdown"                           % "1.6.0" % "it,test",
     "org.apache.poi"              % "poi"                               % "4.1.2",
@@ -38,10 +38,10 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq(
     "jakarta.ws.rs"                % "jakarta.ws.rs-api"           % "3.1.0",
-    "com.github.swagger-akka-http" %% "swagger-akka-http"          % "2.10.0",
-    "com.github.swagger-akka-http" %% "swagger-scala-module"       % "2.9.0",
-    "com.github.swagger-akka-http" %% "swagger-enumeratum-module"  % "2.6.1",
-    "com.fasterxml.jackson.module" %% "jackson-module-scala"       % jacksonVersion,
+    "com.github.swagger-akka-http" %% "swagger-akka-http"          % "2.10.0" cross CrossVersion.for3Use2_13, // FIXME move to scala 3
+    "com.github.swagger-akka-http" %% "swagger-scala-module"       % "2.9.0" cross CrossVersion.for3Use2_13,
+    "com.github.swagger-akka-http" %% "swagger-enumeratum-module"  % "2.6.1" cross CrossVersion.for3Use2_13,
+   // "com.fasterxml.jackson.module" %% "jackson-module-scala"       % jacksonVersion,
     "io.swagger.core.v3"           % "swagger-jaxrs2-jakarta"      % swaggerVersion
 )
 
