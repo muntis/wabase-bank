@@ -53,10 +53,17 @@ Replace the values in the .env file with your own values.
 GROUP_ID=1000
 USER_ID=1000
 ```
+
+Build docker images
+
+```shell
+docker compose build --no-cache
+```
+
 To start docker:
 
 ```shell
-  docker compose up --build
+  docker compose up
 ```
 
 To stop docker:

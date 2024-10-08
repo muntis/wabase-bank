@@ -1,6 +1,6 @@
 val akkaHttpV = "10.2.10"
 val akkaV = "2.6.21"
-val wabaseVersion = "7.0.0-RC11-SNAPSHOT"
+val wabaseVersion = "7.0.0-RC12-SNAPSHOT"
 val jacksonVersion = "2.14.2"
 val swaggerVersion = "2.2.10"
 //val alpakkaVersion = "4.0.0"  // Ensure Apache-2.0 license
@@ -73,10 +73,8 @@ mojozDtosImports := Seq(
   "uniso.app.App.{ qe, tresqlResources }"
 )
 mojozSchemaSqlFiles := List(file("db/00-initial/01-schema.sql"))
-mojozSchemaSqlGenerators := List(org.mojoz.metadata.out.SqlGenerator.postgresql(typeDefs = mojozTypeDefs.value))
+mojozSchemaSqlGenerators := List(org.mojoz.metadata.out.DdlGenerator.postgresql(typeDefs = mojozTypeDefs.value))
 mojozShouldCompileViews := true
-mojozFunctionSignaturesClass := classOf[uniso.app.FunctionSignatures]
-
 
 Compile / unmanagedResourceDirectories += (LocalRootProject / baseDirectory).value / "swagger-ui"
 

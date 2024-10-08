@@ -32,9 +32,9 @@ services:
       context: "github.com/sbt/docker-sbt.git"
       dockerfile: "eclipse-temurin/Dockerfile"
       args:
-        BASE_IMAGE_TAG: "17.0.4.1_1-jdk"
-        SBT_VERSION: "1.8.0"
-        SCALA_VERSION: "2.13.10"
+        BASE_IMAGE_TAG: "21.0.2_13-jdk-jammy"
+        SBT_VERSION: "1.10.2"
+        SCALA_VERSION: "3.5.1"
         USER_ID: ${USER_ID}
         GROUP_ID: ${GROUP_ID}
     ports:

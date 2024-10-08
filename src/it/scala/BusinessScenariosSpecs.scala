@@ -11,11 +11,11 @@ class BusinessScenariosSpecs extends BusinessScenariosBaseSpecs("business") with
   override def deferredResultUri(hash: String) = s"services/deferred/$hash/result"
 
   val RandomDecimalNumberStringPattern = "randomDecimalNumberString\\((\\d*)\\)".r
-  def bankFunctions: Map[String, String] => PartialFunction[String, String] = context => {
+  def bankFunctions: Map[String, Any] => PartialFunction[String, Any] = context => {
     case RandomDecimalNumberStringPattern(length) => (1 to length.toInt).map(_ => ('0' + Random.nextInt(10)).toChar).mkString
   }
 
-  override def templateFunctions: Map[String, String] => PartialFunction[String, String] =
+  override def templateFunctions: Map[String, Any] => PartialFunction[String, Any] =
     context => bankFunctions(context).orElse(super.templateFunctions(context))
 
 

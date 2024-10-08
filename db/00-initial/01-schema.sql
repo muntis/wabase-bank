@@ -2,8 +2,8 @@ create table account(
   id bigint,
   client_id bigint not null,
   balance numeric(12, 2) not null,
-  currency varchar not null,
-  type varchar
+  currency text not null,
+  type text
 );
 comment on table account is 'Bank account data';
 comment on column account.client_id is 'Client id';
@@ -16,7 +16,7 @@ create table account_transaction(
   from_account_id bigint not null,
   to_account_id bigint not null,
   amount numeric(12, 2) not null,
-  currency varchar not null
+  currency text not null
 );
 comment on table account_transaction is 'Money transfer transaction';
 comment on column account_transaction.from_account_id is 'From account id';
@@ -58,22 +58,22 @@ comment on column adm_role_permission.adm_permission_id is 'Link to permission';
 
 create table adm_user(
   id bigint,
-  email varchar,
+  email text,
   notes varchar(250),
   passwd varchar(256),
-  text varchar,
-  name varchar not null,
-  surname varchar not null,
-  phone varchar,
-  position varchar,
+  text text,
+  name text not null,
+  surname text not null,
+  phone text,
+  position text,
   pk varchar(12),
   failed_login_attempts integer default 0 not null,
   password_expiration_date date not null,
   last_login_time timestamp,
-  last_login_ip varchar,
+  last_login_ip text,
   last_failed_login_time timestamp,
-  last_failed_login_success_ip varchar,
-  status varchar not null check (status in ('Active', 'Inactive', 'Blocked')),
+  last_failed_login_success_ip text,
+  status text not null check (status in ('Active', 'Inactive', 'Blocked')),
   activation_code varchar(256),
   is_code_used bool default false
 );
@@ -82,8 +82,8 @@ create table adm_user_history(
   id bigint,
   adm_user_id bigint not null,
   date_from date default now() not null,
-  name varchar,
-  surname varchar,
+  name text,
+  surname text,
   pk varchar(12)
 );
 
@@ -103,19 +103,19 @@ comment on column adm_user_role.date_to is 'Validity period to';
 create table audit(
   id bigint,
   time timestamp default now() not null,
-  action varchar not null check (action in ('login', 'logout', 'create', 'save', 'remove', 'open', 'start', 'end')),
-  source varchar,
+  action text not null check (action in ('login', 'logout', 'create', 'save', 'remove', 'open', 'start', 'end')),
+  source text,
   status varchar(8) not null check (status in ('success', 'error')),
-  entity varchar,
+  entity text,
   entity_id bigint,
-  vards varchar,
-  uzvards varchar,
+  vards text,
+  uzvards text,
   adm_user_id bigint,
-  epasts varchar,
-  ip_address varchar,
-  user_agent varchar,
-  error_data varchar,
-  json_data varchar
+  epasts text,
+  ip_address text,
+  user_agent text,
+  error_data text,
+  json_data text
 );
 comment on table audit is 'Audit logs for user actions';
 comment on column audit.time is 'Record creation time';
@@ -133,8 +133,8 @@ comment on column audit.user_agent is 'User agent';
 
 create table classifier(
   id bigint,
-  code varchar not null,
-  name varchar not null,
+  code text not null,
+  name text not null,
   notes varchar(250),
   is_hierarchical bool default false not null,
   is_active bool default true not null,
@@ -145,22 +145,22 @@ create table classifier_item(
   id bigint,
   parent_id bigint,
   classifier_id bigint,
-  code varchar,
-  name varchar,
+  code text,
+  name text,
   date_from date,
   date_to date,
   notes varchar(2000),
-  longname varchar,
-  code_sort varchar,
-  code_postdoc varchar
+  longname text,
+  code_sort text,
+  code_postdoc text
 );
 
 create table client(
   id bigint,
-  name varchar,
-  address varchar,
-  phone varchar,
-  email varchar
+  name text,
+  address text,
+  phone text,
+  email text
 );
 comment on table client is 'Bank client data';
 comment on column client.name is 'Client name';
