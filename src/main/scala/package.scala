@@ -12,8 +12,8 @@ package object app {
   def now = new java.sql.Timestamp(currentTime)
   def nowDate = new java.sql.Date(currentTime)
 
-  def mapToJavaMap(map: Map[String, _]): java.util.Map[String, AnyRef] = {
-    val result = map.map { (entry: (String, _)) =>
+  def mapToJavaMap(map: Map[String, ?]): java.util.Map[String, AnyRef] = {
+    val result = map.map { (entry: (String, ?)) =>
       (entry._1,
         entry._2 match {
           case l: List[_] => listToJavaList(l)
@@ -25,7 +25,7 @@ package object app {
     result.asInstanceOf[Map[String, AnyRef]].asJava
   }
 
-  def listToJavaList(list: List[_]): java.util.List[_] = {
+  def listToJavaList(list: List[?]): java.util.List[?] = {
     val result = list.toList.map {
       case l: List[_] => listToJavaList(l)
       case m: Map[String@unchecked, _] => mapToJavaMap(m)
@@ -34,7 +34,7 @@ package object app {
     result.asJava
   }
 
-  def javaMapToMap(map: java.util.Map[String, _]): Map[String, _] = {
+  def javaMapToMap(map: java.util.Map[String, ?]): Map[String, ?] = {
     val result = map.asScala.map(entry =>
       (entry._1,
         entry._2 match {
@@ -44,10 +44,10 @@ package object app {
         }
       )
     ).toMap
-    result.asInstanceOf[Map[String, _]]
+    result.asInstanceOf[Map[String, ?]]
   }
 
-  def javaListToList(list: java.util.List[_]): List[_] = {
+  def javaListToList(list: java.util.List[?]): List[?] = {
     val result = list.asScala.toList.map {
       case l: java.util.List[_] => javaListToList(l)
       case m: java.util.Map[String@unchecked, _] => javaMapToMap(m)

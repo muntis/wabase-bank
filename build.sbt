@@ -54,7 +54,11 @@ Test / unmanagedClasspath += // add function signatures for tresql compiler
 scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf8",
   "-Xmacro-settings:metadataFactoryClass=org.mojoz.querease.TresqlMetadataFactory" +
   ", tableMetadataFile=" + mojozGenerateTresqlTableMetadata.value.getCanonicalPath +
-  ", functions=uniso.app.FunctionSignatures")
+  ", functions=uniso.app.FunctionSignatures",
+  "-rewrite",
+  "-source 3.4-migration"
+)
+
 javaOptions ++= Seq("-Dcom.sun.xml.ws.transport.http.client.HttpTransportPipe.dump=true")
 updateOptions := updateOptions.value.withCachedResolution(true).withLatestSnapshots(false)
 

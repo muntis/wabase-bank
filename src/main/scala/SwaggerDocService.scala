@@ -51,7 +51,7 @@ object SwaggerDocService extends SwaggerHttpService{
   override val schemes =  List(appHost.getScheme) //the url of your api, not swagger's json endpoint
 
 
-  override val apiClasses: Set[Class[_]] = Set(AppService.getClass)
+  override val apiClasses: Set[Class[?]] = Set(AppService.getClass)
 
   override val apiDocsPath = "api-docs" //where you want the swagger-json endpoint exposed
   override val info = Info(version = AppService.appVersion) //provides license and other description details
@@ -110,7 +110,7 @@ object SwaggerDocService extends SwaggerHttpService{
 
   def fieldRequired(viewdefs: Map[String, ViewDef])(field: FieldDef) = !getReadOnly(viewdefs)(field) && (field.required || !field.nullable)
 
-  def addEnumIfNeeded(enums: Seq[String], schema: Schema[_]) = {
+  def addEnumIfNeeded(enums: Seq[String], schema: Schema[?]) = {
     (enums, schema) match{
       case (enums, stringSchema: StringSchema) if enums != null => enums.foreach(stringSchema.addEnumItem)
       case _ =>
@@ -416,7 +416,7 @@ object SwaggerDocService extends SwaggerHttpService{
   }.sortBy(_._1)
 
   override def reader = new Reader(readerConfig.openAPI(swaggerConfig)){
-    override def read(classes: util.Set[Class[_]]): OpenAPI = {
+    override def read(classes: util.Set[Class[?]]): OpenAPI = {
       val api = super.read(classes)
       api.getComponents.getSchemas.asScala.foreach {case (name, schema) =>
         if(schema.getProperties != null)

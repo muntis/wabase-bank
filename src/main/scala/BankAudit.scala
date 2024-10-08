@@ -11,7 +11,7 @@ import scala.language.reflectiveCalls
 import scala.util.{Success, Try}
 
 trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
-  this: AppBase[user_principal] with DbAccess with Authorization[user_principal] with ValidationEngine with DbConstraintMessage =>
+  this: AppBase[user_principal] & DbAccess & Authorization[user_principal] & ValidationEngine & DbConstraintMessage =>
   import uniso.app.BankQuereaseIo._
 
   val nodeName = java.net.InetAddress.getLocalHost.getHostName
@@ -108,7 +108,7 @@ trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
         case (_, jso: JsObject) => PGJson(jso)
       }
       val id = transactionNew {
-        val Some(id: Long) = ORT.insert("audit", auditData).asInstanceOf[InsertResult].id
+        val Some(id: Long) = ORT.insert("audit", auditData).asInstanceOf[InsertResult].id: @unchecked
         //if (relevantIds != null) relevantIds.foreach{relevantId => ORT.insert("audit_data_relevant_ids", Map("audit_data_id" -> id, "relevant_id" -> relevantId))}
         id
       }
