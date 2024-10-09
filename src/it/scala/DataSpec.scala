@@ -16,7 +16,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
 
   def defaultListParams = Map("query" -> "", "limit" -> 1)
 
-  private var defaultListParamsForClass: Map[Class[_ <: Dto], Map[String, Any]] = Map(
+  private var defaultListParamsForClass: Map[Class[? <: Dto], Map[String, Any]] = Map(
   )
 
   case class ParamsForGet(
@@ -24,7 +24,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
     forObject: Map[String, Any] = Map.empty,
     extraSql: String = null
   )
-  private val defaultGetParamsForClass: Map[Class[_ <: Dto], ParamsForGet] = Map(
+  private val defaultGetParamsForClass: Map[Class[? <: Dto], ParamsForGet] = Map(
   )
 
   val excludeList = Seq(
@@ -39,8 +39,8 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
       .toSeq
       .sortBy(_.name)
 
-  def listTest(clzz: Class[_ <: Dto], params: Map[String, Any]): Unit = defaultListParamsForClass += clzz -> params
-  def listTest(clzz: Class[_ <: Dto], name: String, params: Map[String, Any]): Unit = createListTest(clzz, name, false, params)
+  def listTest(clzz: Class[? <: Dto], params: Map[String, Any]): Unit = defaultListParamsForClass += clzz -> params
+  def listTest(clzz: Class[? <: Dto], name: String, params: Map[String, Any]): Unit = createListTest(clzz, name, false, params)
 
   views.foreach(view => {
     val viewClass = qe.viewNameToClassMap(view.name)
@@ -56,7 +56,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
     listenToWs(deferredActor)
   }
 
-  private def createListTest(viewClass: Class[_ <: Dto], name: String, shouldCount: Boolean, params: => Map[String, Any]) = {
+  private def createListTest(viewClass: Class[? <: Dto], name: String, shouldCount: Boolean, params: => Map[String, Any]) = {
     it should "return list of "+viewClass+Option(name).map(" with "+_).getOrElse("") in {
       testList(viewClass, params)
     }
@@ -68,13 +68,13 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
     }
   }
 
-  private def createGetTest(viewClass: Class[_ <: Dto], name: String, id: Long, shouldSave: Boolean, params: => Map[String, Any]): Unit = {
+  private def createGetTest(viewClass: Class[? <: Dto], name: String, id: Long, shouldSave: Boolean, params: => Map[String, Any]): Unit = {
     it should s"get${if (shouldSave) "/save" else ""} record of $viewClass ${Option(name).map(" with "+_).getOrElse("")}; id: $id" in {
       testGet(viewClass, id, shouldSave, params)
     }
   }
 
-  def testList(viewClass: Class[_ <: Dto], params: => Map[String, Any]): Unit = {
+  def testList(viewClass: Class[? <: Dto], params: => Map[String, Any]): Unit = {
     login()
     val (cookies, filteredParams) = params.partition(_._1.startsWith(ApplicationStateCookiePrefix))
     getCookieStorage.setCookies(cookies)
@@ -82,7 +82,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
     clearCookies
   }
 
-  def testCount(viewClass: Class[_ <: Dto], params: => Map[String, Any]): Unit = {
+  def testCount(viewClass: Class[? <: Dto], params: => Map[String, Any]): Unit = {
     login()
     val (cookies, filteredParams) = params.partition(_._1.startsWith(ApplicationStateCookiePrefix))
     getCookieStorage.setCookies(cookies)
@@ -90,7 +90,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
     clearCookies
   }
 
-  def testGet(viewClass: Class[_ <: Dto], id: Long, shouldSave: Boolean, params: => Map[String, Any]): Unit = {
+  def testGet(viewClass: Class[? <: Dto], id: Long, shouldSave: Boolean, params: => Map[String, Any]): Unit = {
     login()
     val (cookies, _) = params.partition(_._1.startsWith(ApplicationStateCookiePrefix))
     getCookieStorage.setCookies(cookies)

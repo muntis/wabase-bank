@@ -6,7 +6,7 @@ import org.wabase.JsonConverterProvider
 import org.wabase.client.{ClientException, RestClient}
 import spray.json._
 
-trait TestHelpers {this: RestClient with JsonConverterProvider with org.scalatest.matchers.should.Matchers =>
+trait TestHelpers {this: RestClient & JsonConverterProvider & org.scalatest.matchers.should.Matchers =>
 
   import uniso.app.BankQuereaseIo.MapJsonFormat
 
