@@ -86,12 +86,18 @@ console / initialCommands := s"""
   """.stripMargin
 
 assembly / assemblyMergeStrategy := {
-  case x =>
-    // transform all "deduplicate" to "first"
-    // Since sbt 1.5.0 `in` is deprecated; migrate to slash syntax
-    // https://www.scala-sbt.org/1.x/docs/Migrating-from-sbt-013x.html#slash
-    val s = (assembly / assemblyMergeStrategy).value(x)
-    if (s == MergeStrategy.deduplicate) MergeStrategy.first else s
+  case "application.conf"                   => MergeStrategy.discard
+  case "application.conf.sample"            => MergeStrategy.discard
+  case "logback.xml"                        => MergeStrategy.discard
+  case "logback.xml.sample"                 => MergeStrategy.discard
+  case "module-info.class"                  => MergeStrategy.discard
+  case x if x endsWith "/module-info.class" => MergeStrategy.discard
+  case "LICENSE-2.0.txt"                    => MergeStrategy.last
+  case "reference.conf"                     =>
+    CustomMergeStrategy("reverse-concat-of-reference-conf") { conflicts =>
+      MergeStrategy.concat(conflicts.reverse)
+    }
+   case x                                   => (assembly / assemblyMergeStrategy).value(x)
 }
 
 reStart / mainClass := Some("uniso.app.AppServer")
