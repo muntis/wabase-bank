@@ -3,13 +3,17 @@ create table account(
   client_id bigint not null,
   balance numeric(12, 2) not null,
   currency text not null,
-  type text
+  type text,
+  date_created date not null,
+  date_closed date
 );
 comment on table account is 'Bank account data';
 comment on column account.client_id is 'Client id';
 comment on column account.balance is 'Account balance';
 comment on column account.currency is 'Account currency';
 comment on column account.type is 'Account type';
+comment on column account.date_created is 'Account creation date';
+comment on column account.date_closed is 'Account closing date';
 
 create table account_transaction(
   id bigint,
@@ -158,15 +162,23 @@ create table classifier_item(
 create table client(
   id bigint,
   name text,
+  surname text,
   address text,
   phone text,
-  email text
+  email text,
+  date_created date not null,
+  date_updated date not null,
+  last_login text
 );
 comment on table client is 'Bank client data';
 comment on column client.name is 'Client name';
+comment on column client.surname is 'Client surname';
 comment on column client.address is 'Client address';
 comment on column client.phone is 'Client phone';
 comment on column client.email is 'Client email';
+comment on column client.date_created is 'Client creation date';
+comment on column client.date_updated is 'Client update date';
+comment on column client.last_login is 'Client last login date';
 
 create table deferred_file_body_info(
   sha_256 varchar(64),

@@ -1,0 +1,21 @@
+/***
+ * Here you can define functions available in your database.
+ *
+ * Recognized types:
+ * ------
+ * string,
+ * integer, int, long, short, float, double, decimal,
+ * date, time, dateTime, timestamp,
+ * boolean, bytes, any
+ * ------
+ * any other type results as Any
+ * Function parameter type can end with asterisk - '*' indicating multiple arguments
+ * Function return type can reference some parameter type - fun(par)::'$par'
+ ***/
+
+include /wabase-function-signatures.txt
+
+greatest(pars::'*')::'$pars'
+least(pars::'*')::'$pars'
+
+substring(str::string, from::int, len::int)::string

@@ -3,9 +3,13 @@ comments: Bank client data
 columns:
   - id
   - name                             : Client name
+  - surname                          : Client surname
   - address                          : Client address
   - phone                            : Client phone
   - email                            : Client email
+  - date_created                   ! : Client creation date
+  - date_updated                   ! : Client update date
+  - last_login                       : Client last login date
 
 table: account
 comments: Bank account data
@@ -15,6 +19,8 @@ columns:
   - balance               ! currency : Account balance
   - currency                       ! : Account currency
   - type                             : Account type
+  - date_created                   ! : Account creation date
+  - date_closed                      : Account closing date
 
 table: account_transaction
 comments: Money transfer transaction

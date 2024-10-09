@@ -1,0 +1,10 @@
+name: bank_client
+table: client c
+fields:
+  - id
+  - name
+  - address
+  - phone
+  - email
+  - last_activity = greatest(date_created, date_updated, last_login) : Last activity
+  - initials = substring(name, 1, 1) || substring(surname, 1, 1) : Initials
