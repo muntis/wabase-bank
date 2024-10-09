@@ -9,5 +9,5 @@ fields:
   - request_hash
   - response_time
 filter:
-  - username = sql(':current_user_id::text')
+  - username = :current_user_id::text
   - request_hash
