@@ -19,4 +19,5 @@ class BusinessScenariosSpecs extends BusinessScenariosBaseSpecs("business") with
     context => bankFunctions(context).orElse(super.templateFunctions(context))
 
 
+  override lazy val isFullCompareByDefault: Boolean = false
 }
