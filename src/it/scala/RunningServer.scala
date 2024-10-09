@@ -1,7 +1,7 @@
 package uniso.app
 
 import akka.http.scaladsl.model.HttpMethods
-import org.wabase.AppQuerease
+import org.wabase.{AppQuerease, DefaultAppQuerease}
 import org.wabase.client.WabaseHttpClient
 import org.scalatest.matchers.should.Matchers
 
@@ -9,7 +9,7 @@ import scala.language.reflectiveCalls
 
 trait RunningServer extends WabaseHttpClient with Matchers with TestHelpers {
 
-  override protected def initQuerease: AppQuerease = BankQuerease
+  override protected def initQuerease: AppQuerease = DefaultAppQuerease
   override lazy val port = AppServer.port
 
   override lazy val serverWsPath: String = s"ws://localhost:$port/services/ws"

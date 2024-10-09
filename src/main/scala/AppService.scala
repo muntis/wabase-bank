@@ -80,7 +80,7 @@ object AppService
 
   override def signInUser: AuthenticationDirective[user_principal] = {
     val dr: Directive1[Option[user_principal]] = entity(as[JsValue]).flatMap{userInfo =>
-      val credentials = userInfo.convertTo[Map[String, Any]](BankQuereaseIo.MapJsonFormat)
+      val credentials = userInfo.convertTo[Map[String, Any]](DefaultAppQuereaseIo.MapJsonFormat)
       val username = credentials("username").toString
       val password = credentials("password").toString
 

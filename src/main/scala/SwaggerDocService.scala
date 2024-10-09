@@ -82,7 +82,7 @@ object SwaggerDocService extends SwaggerHttpService{
 
   def systemGeneratedFilterParams = Set("current_user_id")
 
-  val viewdefs = dropOrphans(BankQuerease.nameToViewDef.values.toList)
+  val viewdefs = dropOrphans(org.wabase.DefaultAppQuerease.nameToViewDef.values.toList)
   val viewDefMap = viewdefs.map(v => v.name -> v).toMap
 
   // https://swagger.io/docs/specification/data-models/data-types/
@@ -301,7 +301,7 @@ object SwaggerDocService extends SwaggerHttpService{
     val res = steps.flatMap{
       case Validations(Some(name), _, _) => List(name)
       case Evaluation(_, _, ViewCall(method, view, _)) if view != viewDef.name =>
-        BankQuerease.nameToViewDef.get(view).map(subView =>
+        org.wabase.DefaultAppQuerease.nameToViewDef.get(view).map(subView =>
           getErrorCodesForView(subView, method)
         ).getOrElse(Nil)
       case _ => Nil
@@ -422,7 +422,7 @@ object SwaggerDocService extends SwaggerHttpService{
         if(schema.getProperties != null)
           schema.setProperties(schema.getProperties.asScala.filter{case (_, ss) => ss == null || ss.get$ref == null || !unwantedDefinitions.exists(ud => ss.get$ref.endsWith("/" + ud))}.asJava)
 
-        BankQuerease.nameToViewDef.get(name) match{
+        org.wabase.DefaultAppQuerease.nameToViewDef.get(name) match{
           case Some(metadata) if schema.getProperties != null =>
             schema.setRequired(metadata.fields.filter(fieldRequired(viewDefMap)).map(_.fieldName).asJava)
           case _ =>

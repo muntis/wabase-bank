@@ -15,10 +15,10 @@ object App
     with AppConfig
     with NoValidation
     with BankAudit[user_principal]
-    with BankDbAccess {
+    with DbAccess {
 
   implicit val defaultCP: PoolName = DEFAULT_CP
-  protected def initQuerease: org.wabase.AppQuerease = BankQuerease
+  protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
 
   override def toAuditableMap(user: user_principal): Map[String, Any] = Map(
     "id" -> user.id,

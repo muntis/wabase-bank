@@ -8,7 +8,7 @@ import spray.json._
 
 trait TestHelpers {this: RestClient & JsonConverterProvider & org.scalatest.matchers.should.Matchers =>
 
-  import uniso.app.BankQuereaseIo.MapJsonFormat
+  import org.wabase.DefaultAppQuereaseIo.MapJsonFormat
 
   def parseError(t: ClientException): List[ValidationResult] = t.getCause match{
     case null =>
