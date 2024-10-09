@@ -56,7 +56,7 @@ scalacOptions := Seq("-unchecked", "-deprecation", "-feature", "-encoding", "utf
   ", tableMetadataFile=" + mojozGenerateTresqlTableMetadata.value.getCanonicalPath +
   ", functions=uniso.app.FunctionSignatures",
   "-rewrite",
-  "-source 3.4-migration"
+  "-source:3.4-migration"
 )
 
 javaOptions ++= Seq("-Dcom.sun.xml.ws.transport.http.client.HttpTransportPipe.dump=true")
