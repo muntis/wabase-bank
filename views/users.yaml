@@ -1,9 +1,6 @@
-
-
-
 name: user_list
 table: adm_user l
-api: public list, public count
+api: logged_in_user list, logged_in_user count
 comments: Users list
 fields:
 - id
@@ -22,6 +19,11 @@ fields:
 - email:
   - sortable: true
   - E-mail
+filter:
+  - if_defined(:name_if_def, name = :name_if_def)
+  - if_defined_or_else(:name_if_def_or_else, name = :name_if_def_or_else, true)
+  - if_missing(:name_if_miss, true)
+  - if_all_defined(:name_if_all_def, :surname_if_all_def, name = :name_if_all_def & surname = :surname_if_all_def)
 order:
 - surname, name, ~status
 
