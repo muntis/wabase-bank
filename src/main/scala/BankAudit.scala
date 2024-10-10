@@ -47,7 +47,7 @@ trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
 
     action match {
       case "list" | "count" =>
-      case "login" => log(Map("action" -> "login", "user_data" -> userData, "error_data" -> error, "json_data" -> Map[String, Any]("new_data" -> newData).toJson) ++ userDataNoId, data.relevant_id)
+      case "login" => log(Map("action" -> "login", "user_data" -> userData, "error_data" -> error, "json_data" -> Map[String, Any]("new_data" -> newData).toJson.compactPrint) ++ userDataNoId, data.relevant_id)
       case _ => if(action != "view" || entity == "lietotajs_editable") 
         log(Map(
           "action" -> action,
@@ -60,7 +60,7 @@ trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
             "user_data" -> userData,
             "old_data" -> (if (oldData != null) removeBlacklistedFields(oldData) else oldData),
             //"diff" -> diff,
-          ).toJson
+          ).toJson.compactPrint
         ) ++ userDataNoId, data.relevant_id)
     }
   }
@@ -104,9 +104,7 @@ trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
         "request_time" -> now,
         "node_name" -> nodeName,
         "status" -> (if (data.get("error_data").exists(_ != null)) "error" else "success")
-      )).recursiveMap{
-        case (_, jso: JsObject) => PGJson(jso)
-      }
+      ))
       val id = transactionNew {
         val Some(id: Long) = ORT.insert("audit", auditData).asInstanceOf[InsertResult].id: @unchecked
         //if (relevantIds != null) relevantIds.foreach{relevantId => ORT.insert("audit_data_relevant_ids", Map("audit_data_id" -> id, "relevant_id" -> relevantId))}
