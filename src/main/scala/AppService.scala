@@ -8,19 +8,22 @@ import akka.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissi
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
 import akka.http.scaladsl.server.directives.AuthenticationDirective
-import dto.{user_principal}
+import dto.user_principal
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.{ArraySchema, Content, Encoding, Schema}
 import io.swagger.v3.oas.annotations.parameters._
 import io.swagger.v3.oas.annotations.enums._
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import jakarta.ws.rs.{GET => J_GET, POST => J_POST}
 import org.tresql._
 import org.wabase.Authentication.{BasicAuth, Crypto}
 import org.wabase._
 import spray.json._
 import uniso.app.biz.UserManager
+import jakarta.ws.rs.{Consumes, GET, POST, Path, Produces}
+import jakarta.ws.rs.core.MediaType
+import io.swagger.v3.oas.annotations.headers.Header
+import spray.json.DefaultJsonProtocol._
 
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -69,20 +72,22 @@ object AppService
       .map(scala.io.Source.fromInputStream(_).mkString)
       .map(_.trim)
       .filter(_ != "")
-      .getOrElse("pagaidu versija " + (new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")).format(new java.util.Date))
+      .getOrElse("development version " + (new SimpleDateFormat("yyyy.MM.dd HH:mm:ss")).format(new java.util.Date))
 
-  override implicit val userFormat: JsonFormat[user_principal] = UserHelper.userFormat
+  override implicit val userFormat: RootJsonFormat[user_principal] = UserHelper.userFormat
   lazy val anonymousUser = UserHelper.anonymous
 
   override val SignedInDefaultPath = "/api/current_user"
 
   override def remoteAddressToString(ra: RemoteAddress): String = ra.toIP.map(_.ip.getHostAddress).orNull // FIXME to core
 
+  case class LoginRequest(username: Option[String], password: Option[String])
+  implicit val loginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest)
+
   override def signInUser: AuthenticationDirective[user_principal] = {
-    val dr: Directive1[Option[user_principal]] = entity(as[JsValue]).flatMap{userInfo =>
-      val credentials = userInfo.convertTo[Map[String, Any]](DefaultAppQuereaseIo.MapJsonFormat)
-      val username = credentials("username").toString
-      val password = credentials("password").toString
+    val dr: Directive1[Option[user_principal]] = entity(as[LoginRequest]).flatMap{userInfo =>
+      val username = userInfo.username.getOrElse(throw new IllegalArgumentException("username is required"))
+      val password = userInfo.password.getOrElse(throw new IllegalArgumentException("password is required"))
 
       onSuccess(UserManager.authenticateUser(username, password))
     }
@@ -99,14 +104,48 @@ object AppService
 
   override def authFailureRoute: Route = complete(StatusCodes.Unauthorized)
 
+  @POST
+  @Path("/api/login")
+  @Operation(
+    summary = "Login service",
+    description = "Creates a session for the user",
+    requestBody = new RequestBody(content = Array(new Content(mediaType = "application/json", schema = new Schema(implementation = classOf[LoginRequest])))),
+    responses = Array(
+      new ApiResponse(responseCode = "200", description = "Logged in user", content = Array(new Content(schema = new Schema(implementation = classOf[user_principal])))),
+      new ApiResponse(responseCode = "401", description = "Unauthorized, login failed"),
+      new ApiResponse(responseCode = "500", description = "Internal Server Error, username or password is required")
+    )
+  )
   def login = (path("api" / "login") & post) {
     signIn
   }
 
+  @GET
+  @Path("/api/current_user")
+  @Produces(Array(MediaType.APPLICATION_JSON))
+  @Operation(
+    summary = "Current user service",
+    description = "Returns the current user",
+    responses = Array(
+      new ApiResponse(responseCode = "200", description = "Logged in user", content = Array(new Content(schema = new Schema(implementation = classOf[user_principal]))))
+    )
+  )
   def currentUser = (path("api" / "current_user") & authenticateUser) { u =>
     complete(u)
   }
 
+  @GET
+  @Path("/api/logout")
+  @Operation(
+    summary = "Logout service",
+    description = "Ends the session for the user",
+    parameters = Array(
+      new Parameter(name = "redirectUrl", in = ParameterIn.QUERY, required = false, description = "URL to redirect to after logout", schema = new Schema(implementation = classOf[String]))
+    ),
+    responses = Array(
+      new ApiResponse(responseCode = "303", description = "Redirects to redirect url", headers = Array(new Header(name = "Location", description = "Redirect URL from parameter")))
+    )
+  )
   def logout = (path("api" / "logout") & parameters("redirectUrl".withDefault("")) & authenticateUser) { (redirectUrl, u) =>
     deleteCookie(SessionCookieName, path = "/") {
       u match {
@@ -118,6 +157,7 @@ object AppService
       }
     }
   }
+
   val prettyExceptionHandler = appExceptionHandler.withFallback(ExceptionHandler({ case scala.util.control.NonFatal(e) =>
     logger.error(e.getMessage, e)
     complete(HttpResponse(InternalServerError, entity = e.getMessage))

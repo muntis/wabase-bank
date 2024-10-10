@@ -17,7 +17,7 @@ object UserHelper {
     }
   }
 
-  val userFormat: JsonFormat[user_principal] = dtoJsonFormat[user_principal]
+  val userFormat: RootJsonFormat[user_principal] = dtoJsonFormat[user_principal]
 
   lazy val anonymous : user_principal = dbUse {
     //val user_id = tresql"adm_lietotajs[epasts='anonymous']{ id }".unique[Long]
