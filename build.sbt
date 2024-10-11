@@ -1,6 +1,6 @@
 val akkaHttpV = "10.2.10"
 val akkaV = "2.6.21"
-val wabaseVersion = "7.0.0-RC12-SNAPSHOT"
+val wabaseVersion = "7.0.0-RC14-SNAPSHOT"
 val jacksonVersion = "2.14.2"
 val swaggerVersion = "2.2.10"
 //val alpakkaVersion = "4.0.0"  // Ensure Apache-2.0 license
