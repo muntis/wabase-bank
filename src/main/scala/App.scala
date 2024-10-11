@@ -27,19 +27,12 @@ object App
     "email" -> user.email,
     "name" -> user.name,
     "surname" -> user.surname,
+    "ip_address" -> user.ip_address,
+    "user_agent" -> user.user_agent,
   )
 
   override def current_user_param(user: user_principal): Map[String, Any]
   = Option(user).map(u => Map("current_user_id" -> u.id)) getOrElse Map.empty
-
-  def failedLoginAudit (errorText: String, credentials: Map[String, Any], username: String, ip: String, userAgent: Option[String], user: user_principal = null): Unit = {
-    val u =
-      if (user == null) new user_principal
-      else user
-
-    u.name = username
-    App.auditLoginFailure(u, errorText, credentials)
-  }
 
 }
 

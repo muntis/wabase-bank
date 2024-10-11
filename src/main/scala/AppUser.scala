@@ -10,9 +10,10 @@ import uniso.app.AppService.dtoJsonFormat
 
 
 object UserHelper {
-  def make(email: String): Option[user_principal] = dbUse {
+  def make(email: String, ip: String, userAgent: Option[String]): Option[user_principal] = dbUse {
     App.qe.list[user_principal](Map("email" -> email)).headOption.map { user =>
-      App.auditLogin(user, user)
+      user.ip_address = ip
+      user.user_agent = userAgent.orNull
       user
     }
   }

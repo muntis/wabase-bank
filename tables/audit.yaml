@@ -8,10 +8,10 @@ columns:
   - status                            ! 8 (success error) : Action status
   - entity                            : View name
   - entity_id                         : View ID
-  - vards                             : User name
-  - uzvards                           : User surname
+  - name                              : User name
+  - surname                           : User surname
   - adm_user_id                       : User ID
-  - epasts                            : User email
+  - email                             : User email
   - ip_address                        : User IP address
   - user_agent                        : User agent
   - error_data

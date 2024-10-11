@@ -112,10 +112,10 @@ create table audit(
   status varchar(8) not null check (status in ('success', 'error')),
   entity text,
   entity_id bigint,
-  vards text,
-  uzvards text,
+  name text,
+  surname text,
   adm_user_id bigint,
-  epasts text,
+  email text,
   ip_address text,
   user_agent text,
   error_data text,
@@ -128,10 +128,10 @@ comment on column audit.source is 'Source of the action, PORTAL, API, etc.';
 comment on column audit.status is 'Action status';
 comment on column audit.entity is 'View name';
 comment on column audit.entity_id is 'View ID';
-comment on column audit.vards is 'User name';
-comment on column audit.uzvards is 'User surname';
+comment on column audit.name is 'User name';
+comment on column audit.surname is 'User surname';
 comment on column audit.adm_user_id is 'User ID';
-comment on column audit.epasts is 'User email';
+comment on column audit.email is 'User email';
 comment on column audit.ip_address is 'User IP address';
 comment on column audit.user_agent is 'User agent';
 

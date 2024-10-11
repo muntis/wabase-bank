@@ -15,9 +15,6 @@ trait BankAudit[user_principal] extends AbstractAudit[user_principal] {
   import org.wabase.DefaultAppQuereaseIo._
 
   val nodeName = java.net.InetAddress.getLocalHost.getHostName
-  implicit val extraDb: Seq[org.wabase.AppMetadata.DbAccessKey] = Nil
-
-  //def auditSource: String
 
   override def logUnchangedSaves = true
 

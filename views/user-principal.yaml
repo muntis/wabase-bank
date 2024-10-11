@@ -9,6 +9,8 @@ fields:
   - email
   - full_name = u.name || ' ' || u.surname
   - status
+  - ip_address =
+  - user_agent =
 filter:
   - if_defined(:email, lower(u.email) = lower(:email))
   - u.status = 'Active'

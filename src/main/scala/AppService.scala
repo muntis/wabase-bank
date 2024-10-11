@@ -85,11 +85,10 @@ object AppService
   implicit val loginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest)
 
   override def signInUser: AuthenticationDirective[user_principal] = {
-    val dr: Directive1[Option[user_principal]] = entity(as[LoginRequest]).flatMap{userInfo =>
-      val username = userInfo.username.getOrElse(throw new IllegalArgumentException("username is required"))
+    val dr: Directive1[Option[user_principal]] = (entity(as[LoginRequest]) & extractClientIP.map(remoteAddressToString) & extractUserAgent).tflatMap {case (userInfo, ip, ua) =>
+      val username = userInfo.username.getOrElse(throw new IllegalArgumentException("username is required")).toLowerCase
       val password = userInfo.password.getOrElse(throw new IllegalArgumentException("password is required"))
-
-      onSuccess(UserManager.authenticateUser(username, password))
+      onSuccess(UserManager.authenticateUser(username, password, ip, ua))
     }
 
     dr.flatMap {
