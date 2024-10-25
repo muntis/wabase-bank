@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: docker-images/00-postgres.dockerfile_archive
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     expose:
       - ${POSTGRES_PORT}
     env_file:
