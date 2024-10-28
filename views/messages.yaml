@@ -16,8 +16,9 @@ save:
 
 name: sent_messages
 table: messages m
-api: logged_in_user list, logged_in_user count
+api: logged_in_user list, logged_in_user count, logged_in_user delete
 auth list: sender_id = :current_user_id
+auth delete: sender_id = :current_user_id & is_read = false
 comments: List of messages sent by the logged in user
 fields:
   - id

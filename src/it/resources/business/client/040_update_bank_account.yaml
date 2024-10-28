@@ -1,0 +1,8 @@
+path: data/bank_account/{{account_id}}
+method: PUT
+request:
+  id: <- account_id
+  client_id: <- client_id
+  currency: USD
+  type: SAVINGS
+merge_response: true

@@ -16,7 +16,7 @@ comments: Bank account data
 columns:
   - id
   - client.id                      ! : Client id
-  - balance               ! currency : Account balance
+  - balance                ! balance : Account balance
   - currency                       ! : Account currency
   - type                             : Account type
   - date_created                   ! : Account creation date
@@ -26,7 +26,15 @@ table: account_transaction
 comments: Money transfer transaction
 columns:
   - id
-  - from_account.id     ! account.id: From account id
+  - from_account.id     ! account.id : From account id
   - to_account.id       ! account.id : To account id
-  - amount                ! currency : Transaction amount
+  - amount                 ! balance : Transaction amount
   - currency                       ! : Transaction currency
+
+table: client_manager
+comments: List of users assigned to manage bank clients
+columns:
+  - id
+  - client.id                      ! : Client managed by user
+  - user.id            ! adm_user.id : User who manages client
+  - date_assigned                  ! : Date assigned

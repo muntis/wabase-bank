@@ -179,6 +179,17 @@ comment on column client.date_created is 'Client creation date';
 comment on column client.date_updated is 'Client update date';
 comment on column client.last_login is 'Client last login date';
 
+create table client_manager(
+  id bigint,
+  client_id bigint not null,
+  user_id bigint not null,
+  date_assigned date not null
+);
+comment on table client_manager is 'List of users assigned to manage bank clients';
+comment on column client_manager.client_id is 'Client managed by user';
+comment on column client_manager.user_id is 'User who manages client';
+comment on column client_manager.date_assigned is 'Date assigned';
+
 create table deferred_file_body_info(
   sha_256 varchar(64),
   size bigint not null,
@@ -284,6 +295,8 @@ create index idx_classifier_item_parent_id on classifier_item(parent_id);
 
 alter table client add constraint pk_client primary key (id);
 
+alter table client_manager add constraint pk_client_manager primary key (id);
+
 alter table deferred_file_body_info add constraint pk_deferred_file_body_info primary key (sha_256);
 
 alter table deferred_file_info add constraint pk_deferred_file_info primary key (id);
@@ -312,6 +325,8 @@ alter table adm_user_role add constraint fk_adm_user_role_adm_role_id foreign ke
 alter table classifier add constraint fk_classifier_parent_id foreign key (parent_id) references classifier(id);
 alter table classifier_item add constraint fk_classifier_item_parent_id foreign key (parent_id) references classifier_item(id);
 alter table classifier_item add constraint fk_classifier_item_classifier_id foreign key (classifier_id) references classifier(id);
+alter table client_manager add constraint fk_client_manager_client_id foreign key (client_id) references client(id);
+alter table client_manager add constraint fk_client_manager_user_id foreign key (user_id) references adm_user(id);
 alter table deferred_file_info add constraint fk_deferred_file_info_sha_256 foreign key (sha_256) references deferred_file_body_info(sha_256);
 alter table file_info add constraint fk_file_info_sha_256 foreign key (sha_256) references file_body_info(sha_256);
 alter table messages add constraint fk_messages_sender_id foreign key (sender_id) references adm_user(id);

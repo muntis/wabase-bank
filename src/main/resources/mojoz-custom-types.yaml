@@ -14,10 +14,10 @@ yaml:
 sql:
   - tsvector
 
-type:       currency
+type:       balance
 xsd name:   decimal
 scala name: BigDecimal
 yaml:
-  - euro
+  - balance
 sql:
   - numeric(12, 2)

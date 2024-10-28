@@ -1,4 +1,4 @@
-name: bank_client
+name: bank_client_list
 table: client c
 api: manage_bank_clients list, manage_bank_clients count
 comments:
@@ -12,3 +12,72 @@ fields:
   - email
   - last_activity = greatest(date_created, date_updated, last_login) : Last activity
   - initials = substring(name, 1, 1) || substring(surname, 1, 1) : Initials
+
+name: bank_client
+table: client c
+api: manage_bank_clients get, manage_bank_clients save, manage_bank_clients delete
+auth update delete: exists(client_manager cm[cm.client_id = c.id & cm.user_id = :current_user_id]{1})
+comments:
+  - Bank client details
+  - Must be accessible only to users with role `manage_bank_clients`
+fields:
+  - id
+  - name
+  - surname
+  - address
+  - phone
+  - email
+  - date_created [+]:
+      - field api: readonly
+  - date_updated:
+      - field api: readonly
+  - last_login [+]:
+      - field api: readonly
+  - accounts * bank_account_list:
+insert:
+  - date_created = now()
+  - date_updated = now()
+  - id = insert this
+  - +client_manager{id = nextval('seq'), client_id = :id, user_id = :current_user_id, date_assigned = now()}
+  - redirect this
+update:
+  - date_updated = now()
+  - save this
+
+
+name: bank_account_list
+table: account a
+api:
+comments:
+  - List of bank accounts with their details
+  - Must be accessible only to users with role `manage_bank_accounts`
+fields:
+  - id
+  - balance
+  - currency
+  - type
+  - date_created
+  - date_closed
+
+
+name: bank_account
+table: account a
+api: manage_bank_clients list, manage_bank_clients count, manage_bank_clients get, manage_bank_clients save, manage_bank_clients delete
+auth save delete: exists(client_manager cm[cm.client_id = a.client_id & cm.user_id = :current_user_id]{1})
+comments:
+  - List of bank accounts with their details
+  - Must be accessible only to users with role `manage_bank_clients`
+fields:
+  - id
+  - client_id
+  - balance [+]:
+      - field api: readonly
+  - currency
+  - type
+  - date_created [+]:
+      - field api: readonly
+  - date_closed
+insert:
+  - date_created = now()
+  - balance = 0.0
+  - insert this

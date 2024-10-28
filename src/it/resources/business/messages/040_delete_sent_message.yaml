@@ -1,0 +1,2 @@
+path: data/sent_messages/{{record_id}}
+method: DELETE

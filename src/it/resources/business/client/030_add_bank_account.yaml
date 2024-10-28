@@ -1,0 +1,9 @@
+path: data/bank_account
+method: POST
+request:
+  client_id: <- client_id
+  currency: USD
+  type: SAVINGS
+merge_response: true
+response:
+  id: -> account_id
