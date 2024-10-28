@@ -1,5 +1,9 @@
 name: bank_client
 table: client c
+api: manage_bank_clients list, manage_bank_clients count
+comments:
+  - List of bank clients with their details
+  - Must be accessible only to users with role `manage_bank_clients`
 fields:
   - id
   - name

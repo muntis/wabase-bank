@@ -1,7 +1,7 @@
 name: user_list
 table: adm_user l
 api: logged_in_user list, logged_in_user count
-comments: Users list
+comments: List of users with their details
 fields:
 - id
 - name:
