@@ -71,11 +71,8 @@ configs(IntegrationTest)
 Defaults.itSettings
 
 mojozDtosPackage := "dto"
-mojozDtosImports := Seq(
-  "org.tresql._",
+mojozDtosImports ++= Seq(
   "org.wabase.{ Dto, DtoWithId }",
-  "uniso.app.App.{ qe, tresqlResources }",
-  "org.mojoz.querease.QuereaseMetadata"
 )
 mojozSchemaSqlFiles := List(file("db/00-initial/01-schema.sql"))
 mojozSchemaSqlGenerators := List(org.mojoz.metadata.out.DdlGenerator.postgresql(typeDefs = mojozTypeDefs.value))
