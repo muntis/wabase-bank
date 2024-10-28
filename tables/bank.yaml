@@ -9,7 +9,7 @@ columns:
   - email                            : Client email
   - date_created                   ! : Client creation date
   - date_updated                   ! : Client update date
-  - last_login                       : Client last login date
+  - last_login              dateTime : Client last login date
 
 table: account
 comments: Bank account data
