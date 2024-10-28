@@ -1,5 +1,6 @@
-insert into adm_user(id, status, email, notes, passwd, text, name, surname, phone, position, pk, password_expiration_date) values
-(nextval('seq'), 'Active', 'admin@localhost', 'System administrator', '$s0$e0801$d8nb1HWjHdbFi9z5JerbCA==$u7tt8tN0lzCv9p0Vkq5FczlbRjZLMoSaCwq1aFCVQew=', 'Admin', 'Admin', '1234', 'Admin', 'Admin', '12345', now() + interval '1 year');
+-- ADMINISTRATOR
+insert into adm_user(id, status, email, notes, passwd,name, surname, phone, position, pk, password_expiration_date) values
+(nextval('seq'), 'Active', 'admin@localhost', 'System administrator', '$s0$e0801$d8nb1HWjHdbFi9z5JerbCA==$u7tt8tN0lzCv9p0Vkq5FczlbRjZLMoSaCwq1aFCVQew=', 'Admin', '1234', '+371', 'Admin', '12345', now() + interval '1 year');
 
 insert into adm_user_role(id, adm_user_id, adm_role_id, date_from)
 select nextval('seq'), u.id, r.id, now()

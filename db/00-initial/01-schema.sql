@@ -65,7 +65,6 @@ create table adm_user(
   email text,
   notes varchar(250),
   passwd varchar(256),
-  text text,
   name text not null,
   surname text not null,
   phone text,
@@ -168,7 +167,7 @@ create table client(
   email text,
   date_created date not null,
   date_updated date not null,
-  last_login text
+  last_login timestamp
 );
 comment on table client is 'Bank client data';
 comment on column client.name is 'Client name';

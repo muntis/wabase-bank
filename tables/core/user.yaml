@@ -4,7 +4,6 @@ columns:
 - email
 - notes                     250
 - passwd                    256
-- text
 - name                      !
 - surname                   !
 - phone
