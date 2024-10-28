@@ -1,0 +1,5 @@
+path: data/message_receiver_choice
+params:
+  text: Client manager
+response:
+  - text: -> receiver_name

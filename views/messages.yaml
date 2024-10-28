@@ -1,0 +1,40 @@
+name: send_message
+table: messages m
+api: logged_in_user insert,  logged_in_user get
+comments: Send a message to another user
+fields:
+  - id
+  - receiver = ^message_receiver_choice.text -> = ^message_receiver_choice[^text = _]{id}
+  - sender_id:
+    - field api: excluded
+  - subject
+  - message
+save:
+  - sender_id = :current_user_id
+  - save this
+
+
+name: sent_messages
+table: messages m
+api: logged_in_user list, logged_in_user count
+auth list: sender_id = :current_user_id
+comments: List of messages sent by the logged in user
+fields:
+  - id
+  - receiver = ^message_receiver_choice.text
+  - subject
+  - message
+  - time
+  - is_read
+filter:
+  - message %~~~% :message_contains?
+
+name: message_receiver_choice
+table: adm_user u
+api: logged_in_user list
+comments: List of users for user selection
+fields:
+  - id
+  - text = u.name || ' ' || u.surname || ' (' || u.email || ')'
+filter:
+  - ^text %~~~% :text?

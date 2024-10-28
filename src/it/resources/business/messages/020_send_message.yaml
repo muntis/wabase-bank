@@ -1,0 +1,9 @@
+path: data/send_message
+method: POST
+request:
+  subject: Hello
+  message: <- randomString(100) -> new_message
+  receiver: <- receiver_name
+merge_response: true
+response:
+  id: -> record_id

@@ -227,6 +227,23 @@ create table files_on_disk(
 comment on table files_on_disk is 'File deletion process service table';
 comment on column files_on_disk.path is 'Datnes taka failsistēmā';
 
+create table messages(
+  id bigint,
+  sender_id bigint not null,
+  receiver_id bigint not null,
+  subject text not null,
+  message text not null,
+  time timestamp default now() not null,
+  is_read bool default false not null
+);
+comment on table messages is 'Internal messing between users';
+comment on column messages.sender_id is 'User who sent the message';
+comment on column messages.receiver_id is 'User who received the message';
+comment on column messages.subject is 'Message subject';
+comment on column messages.message is 'Message content';
+comment on column messages.time is 'Time of the message';
+comment on column messages.is_read is 'Is the message read';
+
 alter table account add constraint pk_account primary key (id);
 
 alter table account_transaction add constraint pk_account_transaction primary key (id);
@@ -281,6 +298,8 @@ alter table file_info add constraint pk_file_info primary key (id);
 
 alter table files_on_disk add constraint pk_files_on_disk primary key (path);
 
+alter table messages add constraint pk_messages primary key (id);
+
 alter table account add constraint fk_account_client_id foreign key (client_id) references client(id);
 alter table account_transaction add constraint fk_account_transaction_from_account_id foreign key (from_account_id) references account(id);
 alter table account_transaction add constraint fk_account_transaction_to_account_id foreign key (to_account_id) references account(id);
@@ -295,3 +314,5 @@ alter table classifier_item add constraint fk_classifier_item_parent_id foreign 
 alter table classifier_item add constraint fk_classifier_item_classifier_id foreign key (classifier_id) references classifier(id);
 alter table deferred_file_info add constraint fk_deferred_file_info_sha_256 foreign key (sha_256) references deferred_file_body_info(sha_256);
 alter table file_info add constraint fk_file_info_sha_256 foreign key (sha_256) references file_body_info(sha_256);
+alter table messages add constraint fk_messages_sender_id foreign key (sender_id) references adm_user(id);
+alter table messages add constraint fk_messages_receiver_id foreign key (receiver_id) references adm_user(id);

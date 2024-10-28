@@ -1,0 +1,10 @@
+table: messages
+comments: Internal messing between users
+columns:
+  - id
+  - sender.id                   ! adm_user.id : User who sent the message
+  - receiver.id                 ! adm_user.id : User who received the message
+  - subject                                 ! : Message subject
+  - message                                 ! : Message content
+  - time                   ! dateTime = now() : Time of the message
+  - is_read                 ! boolean = false : Is the message read

@@ -1,0 +1,5 @@
+path: data/sent_messages
+params:
+  message_contains: <- new_message
+response:
+  - id: <- record_id

@@ -7,7 +7,16 @@ select nextval('seq'), u.id, r.id, now()
 from adm_user u, adm_role r
 where u.email = 'admin@localhost' and r.code = 'admin';
 
+-- CLIENT MANAGER
+insert into adm_user(id, status, email, notes, passwd, name, surname, phone, position, pk, password_expiration_date) values
+(nextval('seq'), 'Active', 'cm@localhost', 'Client manager', '$s0$e0801$d8nb1HWjHdbFi9z5JerbCA==$u7tt8tN0lzCv9p0Vkq5FczlbRjZLMoSaCwq1aFCVQew=', 'Client', 'Manager', '+371', 'Client manager', '123456', now() + interval '1 year');
 
+insert into adm_user_role(id, adm_user_id, adm_role_id, date_from)
+select nextval('seq'), u.id, r.id, now()
+from adm_user u, adm_role r
+where u.email = 'cm@localhost' and r.code = 'client_manager';
+
+-- TEST CLASSIFIER
 insert into classifier(id, code, name, notes, is_hierarchical, is_active, parent_id) values
 (nextval('seq'), 'TEST', 'Test classifier', 'Test classifier', false, true, null);
 
