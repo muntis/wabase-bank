@@ -1,6 +1,7 @@
 create table account(
   id bigint,
   client_id bigint not null,
+  number text not null,
   balance numeric(12, 2) not null,
   currency text not null,
   type text,
@@ -9,6 +10,7 @@ create table account(
 );
 comment on table account is 'Bank account data';
 comment on column account.client_id is 'Client id';
+comment on column account.number is 'Account number';
 comment on column account.balance is 'Account balance';
 comment on column account.currency is 'Account currency';
 comment on column account.type is 'Account type';
@@ -245,7 +247,8 @@ create table messages(
   subject text not null,
   message text not null,
   time timestamp default now() not null,
-  is_read bool default false not null
+  is_read bool default false not null,
+  attachment_id bigint
 );
 comment on table messages is 'Internal messing between users';
 comment on column messages.sender_id is 'User who sent the message';
@@ -254,6 +257,7 @@ comment on column messages.subject is 'Message subject';
 comment on column messages.message is 'Message content';
 comment on column messages.time is 'Time of the message';
 comment on column messages.is_read is 'Is the message read';
+comment on column messages.attachment_id is 'Attached file';
 
 alter table account add constraint pk_account primary key (id);
 
@@ -331,3 +335,4 @@ alter table deferred_file_info add constraint fk_deferred_file_info_sha_256 fore
 alter table file_info add constraint fk_file_info_sha_256 foreign key (sha_256) references file_body_info(sha_256);
 alter table messages add constraint fk_messages_sender_id foreign key (sender_id) references adm_user(id);
 alter table messages add constraint fk_messages_receiver_id foreign key (receiver_id) references adm_user(id);
+alter table messages add constraint fk_messages_attachment_id foreign key (attachment_id) references file_info(id);

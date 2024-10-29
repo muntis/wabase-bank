@@ -8,3 +8,4 @@ columns:
   - message                                 ! : Message content
   - time                   ! dateTime = now() : Time of the message
   - is_read                 ! boolean = false : Is the message read
+  - attachment.id                file_info.id : Attached file

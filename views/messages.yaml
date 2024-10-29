@@ -20,6 +20,8 @@ api: logged_in_user list, logged_in_user count, logged_in_user delete
 auth list: sender_id = :current_user_id
 auth delete: sender_id = :current_user_id & is_read = false
 comments: List of messages sent by the logged in user
+joins:
+  - m [m.attachment_id = f.id] file_info f?
 fields:
   - id
   - receiver = ^message_receiver_choice.text
@@ -27,6 +29,7 @@ fields:
   - message
   - time
   - is_read
+  - attachment = f.filename
 filter:
   - message %~~~% :message_contains?
 

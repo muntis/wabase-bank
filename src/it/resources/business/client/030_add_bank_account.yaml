@@ -4,6 +4,7 @@ request:
   client_id: <- client_id
   currency: USD
   type: SAVINGS
+  number: <- randomString(10)
 merge_response: true
 response:
   id: -> account_id

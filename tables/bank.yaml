@@ -16,6 +16,7 @@ comments: Bank account data
 columns:
   - id
   - client.id                      ! : Client id
+  - number                         ! : Account number
   - balance                ! balance : Account balance
   - currency                       ! : Account currency
   - type                             : Account type
