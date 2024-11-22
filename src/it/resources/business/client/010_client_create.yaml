@@ -5,3 +5,5 @@ request:
 merge_response: true
 response:
   id: -> client_id
+  accounts:
+    - id: -> account_id

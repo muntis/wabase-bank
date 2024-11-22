@@ -4,4 +4,7 @@ request:
   template: client.yaml
   id: <- client_id
   address: <- randomString(10) -> newAddress
+  accounts:
+    - id: <- account_id
+      number: <- randomString(12) -> newNumber
 merge_response: true

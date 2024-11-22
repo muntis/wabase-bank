@@ -3,3 +3,7 @@ surname: Lovelace
 address: 42, The Street
 phone: "123456789"
 email: ada@lovelace.gov
+accounts:
+  - currency: EUR
+    type: savings
+    number: <- randomString(12)
