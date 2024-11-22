@@ -6,12 +6,20 @@ comments:
   - Must be accessible only to users with role `manage_bank_clients`
 fields:
   - id
-  - name
+  - name:
+    - sortable: true
   - address
   - phone
-  - email
-  - last_activity = greatest(date_created, date_updated, last_login) : Last activity
-  - initials = substring(name, 1, 1) || substring(surname, 1, 1) : Initials
+  - email:
+    - sortable: true
+  - last_activity = greatest(date_created, date_updated, last_login) :
+    - Last activity
+    - sortable: true
+  - initials = substring(name, 1, 1) || substring(surname, 1, 1) :
+    - Initials
+    - sortable: true
+order:
+  - id
 
 name: bank_client
 table: client c
@@ -27,6 +35,7 @@ fields:
   - address
   - phone
   - email
+  - balance balance = (account a[a.client_id = c.id]{sum(a.balance)}) : Total balance
   - date_created [+]:
       - field api: readonly
   - date_updated:
