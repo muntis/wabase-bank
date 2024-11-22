@@ -28,15 +28,15 @@ import java.util
 import scala.io.Source
 
 // Only for annotations use
-class faila_augšupielādes_forma {
+class file_upload_form {
   @io.swagger.v3.oas.annotations.media.Schema(`type` = "string", format = "binary")
   val file: String = ""
 }
 
-class faila_izmēra_ierobežojums {
-  @io.swagger.v3.oas.annotations.media.Schema(description = "Saņemtais faila izmērs baitos")
+class file_upload_limits {
+  @io.swagger.v3.oas.annotations.media.Schema(description = "Received file size in bytes")
   val actualSize: Long = 0
-  @io.swagger.v3.oas.annotations.media.Schema(description = "Maksimālais faila izmērs baitos")
+  @io.swagger.v3.oas.annotations.media.Schema(description = "Maximum allowed file size in bytes")
   val limit: Long = 0
 }
 
@@ -47,8 +47,8 @@ object SwaggerDocService extends SwaggerHttpService{
     } else "http://localhost:8090"
   }
   val appHost = new URI(hostString)
-  override val host =  appHost.getHost + (if (appHost.getPort == -1 ) "" else  ":" + appHost.getPort) //the url of your api, not swagger's json endpoint
-  override val schemes =  List(appHost.getScheme) //the url of your api, not swagger's json endpoint
+  override val host =  appHost.getHost + (if (appHost.getPort == -1 ) "" else  ":" + appHost.getPort) //the url of your api, not swagger's JSON endpoint
+  override val schemes =  List(appHost.getScheme) //the url of your api, not swagger's JSON endpoint
 
 
   override val apiClasses: Set[Class[?]] = Set(AppService.getClass)
@@ -140,17 +140,10 @@ object SwaggerDocService extends SwaggerHttpService{
 
   def schemasFromViewDefs = {
     viewDefMap.view.mapValues {value =>
-/*      println("=========================================")
-      println("value.name: "+value.name)
-      println("value.saveTo: "+value.saveTo)*/
-
       val filteredFields = value.fields.filterNot(_.api.excluded)
       val fields = filteredFields.map(schemaFromFieldDef(viewDefMap)).toMap
 
       val requiredFields = filteredFields.filter(fieldRequired(viewDefMap)).map(_.fieldName).toList
-      /*    println("=========================================")
-          fields.foreach(println)
-          println("=========================================")*/
       new ObjectSchema().name(value.name).description(value.comments).properties(fields.asJava).required(requiredFields.asJava)
     }.toMap
   }
@@ -184,7 +177,6 @@ object SwaggerDocService extends SwaggerHttpService{
   }
 
   def createOperation(summary: String) = (new Operation).summary(summary)
-  def validationResultViewName = "kļūdu_saraksts"
 
   implicit class OperationExtras(val op: Operation){
     def withIdInPath: Operation = {
@@ -225,7 +217,7 @@ object SwaggerDocService extends SwaggerHttpService{
       ((if(sortOptions == null || sortOptions.isEmpty) Nil else
         List(
           ("sort",
-            "Lauks pēc kura kārtot, ~ lauka priekšā apzīmē dilstošu kārtošanu",
+            "Field to sort by, ~ prefix for descending order",
             addEnumIfNeeded(sortOptions.flatMap(v => List(v, "~"+v)), new StringSchema))
         ))
       ++ List(
@@ -280,11 +272,10 @@ object SwaggerDocService extends SwaggerHttpService{
       op
     }
 
-    def addNotFoundResponse = addErrorResponse("404", "Ieraksts nav atrasts")
+    def addNotFoundResponse = addErrorResponse("404", "Record not found")
     def addBadRequestResponse(validations: Seq[String] = null) = addErrorResponse("400",
-      "Pieprasījumu nav iespējams izpildīt, saņemtie dati nav korekti. "+
-        Option(validations).filter(_.nonEmpty).map(v =>"Validāciju kļudu kodi: "+validations.mkString(", ")).getOrElse(""),
-//      jsonContent(validationResultViewName, true)
+      "Request can not be processed, please check request parameters" +
+        Option(validations).filter(_.nonEmpty).map(v =>"Validation error codes: "+validations.mkString(", ")).getOrElse(""),
     )
     def addInternalServerError = addErrorResponse("500", "Internal server error")
 
@@ -313,11 +304,12 @@ object SwaggerDocService extends SwaggerHttpService{
     val path = "/data/" + viewDef.name
     val countPath = "/count/" + viewDef.name
     val pathWithId = path + "/{id}"
+    val extendedViewName = Option(viewDef.comments).filter(_.nonEmpty).map(viewDef.name + "; " + _).getOrElse(viewDef.name)
     lazy val filterFields = App.viewNameToFilterMetadata(viewDef.name)
     val ungroupedOperations = viewDef.apiMethodToRoles.toList.flatMap{
       case ("get", apiMethod) =>
         List( (pathWithId, "GET",
-          createOperation(s"Atgriezt pēc id '${viewDef.comments}''")
+          createOperation(s"Return by id $extendedViewName'")
             .withIdInPath
             .addSuccessResponse(view = viewDef.name)
             .addNotFoundResponse
@@ -327,7 +319,7 @@ object SwaggerDocService extends SwaggerHttpService{
         val validations = getErrorCodesForView(viewDef, "save")
         List(
           ( pathWithId, "PUT",
-            createOperation(s"Labot '${viewDef.comments}''")
+            createOperation(s"Edit $extendedViewName")
               .withIdInPath
               .addSuccessResponse(view = viewDef.name)
               .addRequestBody(view = viewDef.name)
@@ -336,7 +328,7 @@ object SwaggerDocService extends SwaggerHttpService{
               .addInternalServerError
           ),
           ( path, "POST",
-            createOperation(s"Pievienot '${viewDef.comments}''")
+            createOperation(s"Add $extendedViewName")
               .addSuccessResponse(view = viewDef.name)
               .addRequestBody(view = viewDef.name)
               .addBadRequestResponse(validations)
@@ -347,7 +339,7 @@ object SwaggerDocService extends SwaggerHttpService{
         val validations = getErrorCodesForView(viewDef, "update")
         List(
           (pathWithId, "PUT",
-            createOperation(s"Labot '${viewDef.comments}''")
+            createOperation(s"Edit $extendedViewName")
               .withIdInPath
               .addSuccessResponse(view = viewDef.name)
               .addRequestBody(view = viewDef.name)
@@ -360,7 +352,7 @@ object SwaggerDocService extends SwaggerHttpService{
         val validations = getErrorCodesForView(viewDef, "save")
         List(
           ( path, "POST",
-            createOperation(s"Pievienot '${viewDef.comments}''")
+            createOperation(s"Add $extendedViewName")
               .addSuccessResponse(view = viewDef.name)
               .addRequestBody(view = viewDef.name)
               .addBadRequestResponse(validations)
@@ -371,7 +363,7 @@ object SwaggerDocService extends SwaggerHttpService{
         val validations = getErrorCodesForView(viewDef, "save")
         List(
           (path, "POST",
-            createOperation(s"Pievienot '${viewDef.comments}''")
+            createOperation(s"Add $extendedViewName")
               .addSuccessResponse(view = viewDef.name)
               .addRequestBody(view = viewDef.name)
               .addBadRequestResponse(validations)
@@ -380,14 +372,14 @@ object SwaggerDocService extends SwaggerHttpService{
         )
       case ("delete", apiMethod) =>
         List((pathWithId, "DELETE",
-          createOperation(s"Dzēst '${viewDef.comments}''")
+          createOperation(s"Delete $extendedViewName")
             .withIdInPath
             .addNotFoundResponse
             .addInternalServerError
         ))
       case ("list", apiMethod) =>
         List(( path, "GET",
-          createOperation(s"Ierakstu saraksts '${viewDef.comments}''")
+          createOperation(s"Record list $extendedViewName")
             .addSuccessResponse(view = viewDef.name, array = true)
             .addQueryParams(filterFields)
             .addInternalServerError
@@ -395,8 +387,8 @@ object SwaggerDocService extends SwaggerHttpService{
         ))
       case ("count", apiMethod) =>
         List(( countPath, "GET",
-          createOperation(s"Ierakstu skaits '${viewDef.comments}''")
-            .addIntegerResponse("Ierakstu skaits", "555")
+          createOperation(s"Record count $extendedViewName")
+            .addIntegerResponse("Record count", "555")
             .addQueryParams(filterFields)
             .addInternalServerError
         ))
@@ -438,7 +430,7 @@ object SwaggerDocService extends SwaggerHttpService{
   }
 
   def dropOrphans(views: List[ViewDef]): List[ViewDef] = {
-    val viewNamesWithApi = views.filter(view => view.apiMethodToRoles.nonEmpty || view.name == validationResultViewName).map(_.name).toSet
+    val viewNamesWithApi = views.filter(view => view.apiMethodToRoles.nonEmpty).map(_.name).toSet
     val viewNamesInFields = views.flatMap(_.fields).filter(_.type_.isComplexType).map(_.type_.name).toSet
     val viewsToReturn = viewNamesWithApi ++ viewNamesInFields
     views.filter(v => viewsToReturn(v.name))
