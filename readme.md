@@ -79,6 +79,15 @@ Open swagger api at:
 
 http://localhost:8090/api-docs/ui/index.html
 
+For login use:
+
+```json
+{
+  "username": "admin@localhost",
+  "password": "admin"
+}
+```
+
 To run automated tests:
 
 ```shell
