@@ -32,6 +32,8 @@ fields:
   - attachment = f.filename
 filter:
   - message %~~~% :message_contains?
+  - if_defined(:username,  exists(adm_user a[a.id = m.receiver_id & a.email = :username?]{1}))
+  - is_read
 
 name: message_receiver_choice
 table: adm_user u
