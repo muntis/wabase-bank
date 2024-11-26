@@ -19,6 +19,7 @@ fields:
     - Initials
     - sortable: true
 order:
+  - last_activity
   - id
 
 name: bank_client

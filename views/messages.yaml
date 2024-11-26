@@ -24,7 +24,8 @@ joins:
   - m [m.attachment_id = f.id] file_info f?
 fields:
   - id
-  - receiver = ^message_receiver_choice.text
+  - receiver = ^message_receiver_choice.text:
+      - sortable: true
   - subject
   - message
   - time
@@ -34,6 +35,9 @@ filter:
   - message %~~~% :message_contains?
   - if_defined(:username,  exists(adm_user a[a.id = m.receiver_id & a.email = :username?]{1}))
   - is_read
+order:
+  - is_read
+  - ~time
 
 name: message_receiver_choice
 table: adm_user u
