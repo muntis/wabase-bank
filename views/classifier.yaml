@@ -24,13 +24,16 @@ fields:
 name: classifier_item_choice
 table: classifier_item i
 api: logged_in_user list
+can_copy: true
 limit: 9999
 joins:
   - i/classifier k
 fields:
   - id
-  - code
-  - name = i.name || ''
+  - code:
+      - can_copy: true
+  - name = i.name || '':
+      - can_copy: true
   - cla_code = k.code
   - code_sort = i.code_sort
 filter:

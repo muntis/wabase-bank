@@ -1,9 +1,9 @@
 package uniso.app
 
 import dto.user_principal
-import org.wabase._
-import org.wabase.AppMetadata.{Action, AugmentedAppFieldDef}
-import org.tresql._
+import org.wabase.*
+import org.wabase.AppMetadata.{Action, AugmentedAppFieldDef, KnownFieldExtras, KnownViewExtras}
+import org.tresql.*
 
 import scala.concurrent.ExecutionContext
 
@@ -18,7 +18,10 @@ object App
     with DbAccess {
 
   implicit val defaultCP: PoolName = DEFAULT_CP
-  protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
+  protected def initQuerease: org.wabase.AppQuerease = new org.wabase.AppQuerease{
+    override lazy val knownFieldExtras = KnownFieldExtras() + "can_copy"
+    override lazy val knownViewExtras = KnownViewExtras() + "can_copy"
+  }
 
   override def toAuditableMap(user: user_principal): Map[String, Any] = Map(
     "id" -> user.id,
@@ -32,7 +35,14 @@ object App
   )
 
   override def current_user_param(user: user_principal): Map[String, Any]
-  = Option(user).map(u => Map("current_user_id" -> u.id)) getOrElse Map.empty
+    = Option(user).map(u => Map("current_user_id" -> u.id)) getOrElse Map.empty
 
+  // Lists all views that can be copied with all fields that can be copied
+  App.qe.nameToViewDef.values.filter(_.extras.getOrElse("can_copy", false).asInstanceOf[Boolean]).foreach { v =>
+    logger.debug(s"View ${v.name} can be copied, with following fields: ")
+    v.fields.filter(_.extras.getOrElse("can_copy", false).asInstanceOf[Boolean]).foreach { f =>
+      logger.debug(s"Field ${f.name} can be copied")
+    }
+  }
 }
 
