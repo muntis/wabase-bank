@@ -1,0 +1,4 @@
+path: data/count:user_list
+params:
+  name_if_def: Admin
+response: 1
