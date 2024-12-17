@@ -4,5 +4,3 @@ position: Artist
 phone: "123"
 status: Active
 notes: Test user
-email: <- randomEmail
-passwd: <- randomString(12)

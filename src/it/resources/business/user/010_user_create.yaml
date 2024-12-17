@@ -2,6 +2,8 @@ path: data/user_edit
 method: POST
 request:
   template: user.yaml
-merge_response: true
+  pwd: <- randomString(12)
+  email: <- randomEmail -> email
 response:
   id: -> user_id
+  template: user.yaml

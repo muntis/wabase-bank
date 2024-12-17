@@ -13,11 +13,6 @@ import scala.util.{Random, Try}
 
 class UserManager {
 
-
-  def p_new_hash(ctx: Map[String, Any]): String = {
-    Authentication.passwordHash(String.valueOf(ctx("p_new")))
-  }
-
   def generate_pwd(ctx: Map[String, Any]): String = {
     val random = new java.security.SecureRandom()
     val pwdRequriments =
@@ -54,6 +49,10 @@ class UserManager {
 }
 
 object UserManager {
+
+  def passwordHash(ctx: Map[String, Any]): String = {
+    Authentication.passwordHash(String.valueOf(ctx("pwd")))
+  }
 
   def authenticateUser(username: String, password: String, ip: String, userAgent: Option[String]): Future[Option[user_principal]] = {
     import app._

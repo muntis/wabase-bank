@@ -35,12 +35,15 @@ fields:
   - phone
   - status
   - email
-  - passwd
+  - pwd =
+  - passwd:
+      - field api: excluded
   - notes
   - password_expiration_date:
       - field api: readonly
 save:
   - password_expiration_date = now() + '90 days'::interval
+  - passwd = uniso.app.biz.UserManager.passwordHash
   - save this
 
 name: user_list_def_test
