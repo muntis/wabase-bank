@@ -7,6 +7,10 @@ values (nextval('seq'), 'Client manager', 'client_manager', 'Client manager', fa
 
 
 insert into adm_permission(id, code, comment)
+values (nextval('seq'), 'MANAGE_USERS', 'Manage users');
+
+
+insert into adm_permission(id, code, comment)
 values (nextval('seq'), 'MANAGE_CLASSIFIERS', 'Manage classifiers');
 
 insert into adm_permission(id, code, comment)
@@ -22,7 +26,7 @@ where r.code = 'admin' and p.code = 'MANAGE_CLASSIFIERS';
 insert into adm_role_permission(id, adm_role_id, adm_permission_id)
 select nextval('seq'), r.id, p.id
 from adm_role r, adm_permission p
-where r.code = 'admin' and p.code = 'MANAGE_BANK_CLIENTS';
+where r.code = 'admin' and p.code in ('MANAGE_BANK_CLIENTS', 'MANAGE_USERS');
 
 insert into adm_role_permission(id, adm_role_id, adm_permission_id)
 select nextval('seq'), r.id, p.id

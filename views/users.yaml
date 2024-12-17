@@ -19,10 +19,55 @@ fields:
   - sortable: true
   - E-mail
 filter:
+  - email
+order:
+- surname, name, ~status
+
+name: user_edit
+table: adm_user l
+api: manage_users get, manage_users save
+comments: Edit user details
+fields:
+  - id
+  - name
+  - surname
+  - position
+  - phone
+  - status
+  - email
+  - passwd
+  - notes
+  - password_expiration_date:
+      - field api: readonly
+save:
+  - password_expiration_date = now() + '90 days'::interval
+  - save this
+
+name: user_list_def_test
+table: adm_user l
+api: logged_in_user list, logged_in_user count
+comments: List of users with their details, shows how if defined works
+fields:
+  - id
+  - name:
+      - sortable: true
+      - Name
+  - surname:
+      - sortable: true
+      - Surname
+  - phone:
+      - Phone
+  - status:
+      - sortable: true
+      - Status
+  - email:
+      - sortable: true
+      - E-mail
+filter:
   - if_defined(:name_if_def, name = :name_if_def)
   - if_defined_or_else(:name_if_def_or_else, name = :name_if_def_or_else, true)
   - if_missing(:name_if_miss, true)
   - if_all_defined(:name_if_all_def, :surname_if_all_def, name = :name_if_all_def & surname = :surname_if_all_def)
 order:
-- surname, name, ~status
+  - surname, name, ~status
 

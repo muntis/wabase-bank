@@ -1,4 +1,4 @@
-path: data/count:user_list
+path: data/count:user_list_def_test
 params:
   name_if_def: Admin
 response: 1
