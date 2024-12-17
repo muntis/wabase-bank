@@ -1,0 +1,7 @@
+path: data/user_edit
+method: POST
+request:
+  template: user.yaml
+merge_response: true
+response:
+  id: -> user_id
