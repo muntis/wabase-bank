@@ -1,7 +1,7 @@
-path: data/bank_account/{{account_id}}
+path: data/bank_account/{{account2_id}}
 method: PUT
 request:
-  id: <- account_id
+  id: <- account2_id
   client_id: <- client_id
   currency: USD
   type: SAVINGS

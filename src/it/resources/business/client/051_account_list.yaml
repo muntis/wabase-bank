@@ -1,0 +1,6 @@
+path: data/bank_account_list
+params:
+  client_id: <- client_id
+response:
+  - id: <- account_id
+  - id: <- account2_id

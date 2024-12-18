@@ -7,4 +7,4 @@ request:
   number: <- randomString(10)
 merge_response: true
 response:
-  id: -> account_id
+  id: -> account2_id

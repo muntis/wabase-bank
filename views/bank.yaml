@@ -113,4 +113,8 @@ fields:
   - type
   - client_name = c.name || ' ' || c.surname
 filter:
+  - client_id
   - ^client_name %~~~% :client_name?
+order:
+  - client_name
+  - id
