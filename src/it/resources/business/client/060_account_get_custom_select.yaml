@@ -1,0 +1,3 @@
+path: data/bank_account_get_with_custom_select/{{account_id}}
+response:
+  id: <- account_id

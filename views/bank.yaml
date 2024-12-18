@@ -118,3 +118,27 @@ filter:
 order:
   - client_name
   - id
+
+name: bank_account_get_with_custom_select
+table: account a
+api: manage_bank_clients get
+comments: Bank account details with custom select
+fields:
+  - id
+  - number
+  - balance
+  - custom_field string =
+get:
+  - unique_opt account[id = :id] {id, number, balance, 'custom_value' custom_field}
+
+name: bank_account_by_client
+table: account a
+api: manage_bank_clients get
+comments: Bank account details with unique option
+fields:
+  - id
+  - number
+  - balance
+get:
+  - client_id = :id
+  - unique_opt list bank_account_list
