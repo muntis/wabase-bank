@@ -123,6 +123,8 @@ name: bank_account_list_with_count
 table: account a
 api: manage_bank_clients list, manage_bank_clients count
 comments: Returns list of page of bank accounts with total count
+joins:
+  - a [a.client_id = c.id] client c
 fields:
   - id
   - number
@@ -132,6 +134,7 @@ fields:
   - client_id
   - date_created
   - date_closed
+  - client_name = c.name || ' ' || c.surname
 filter:
   - client_id
 order:
