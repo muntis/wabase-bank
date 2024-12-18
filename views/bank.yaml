@@ -132,6 +132,11 @@ fields:
   - client_id
   - date_created
   - date_closed
+filter:
+  - client_id
+order:
+  - client_name
+  - id
 list:
   - c: count this
   - d: list  this
