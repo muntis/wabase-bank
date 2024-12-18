@@ -1,0 +1,8 @@
+path: data/bank_account_list_with_count
+params:
+  client_id: <- client_id
+response:
+  count: 2
+  data:
+  - id: <- account_id
+  - id: <- account2_id

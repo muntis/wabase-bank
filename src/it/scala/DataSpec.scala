@@ -28,6 +28,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
   )
 
   val excludeList = Seq(
+    "bank_account_list_with_count"
   )
 
   val excludeGetList = Seq(

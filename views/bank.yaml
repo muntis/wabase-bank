@@ -118,3 +118,21 @@ filter:
 order:
   - client_name
   - id
+
+name: bank_account_list_with_count
+table: account a
+api: manage_bank_clients list, manage_bank_clients count
+comments: Returns list of page of bank accounts with total count
+fields:
+  - id
+  - number
+  - balance
+  - currency
+  - type
+  - client_id
+  - date_created
+  - date_closed
+list:
+  - c: count this
+  - d: list  this
+  - return (count = :c) + (data = :d)
