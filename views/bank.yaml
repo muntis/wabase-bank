@@ -141,9 +141,9 @@ fields:
     filter:
       - client_id
 list:
-  - count: count bank_account_list_with_count_data
-  - data:   list bank_account_list_with_count_data
-  - return this
+  - c: count bank_account_list_with_count_data
+  - d:   list bank_account_list_with_count_data
+  - return (count = :c) + (data = :d)
 
 
 name: bank_account_get_with_custom_select
