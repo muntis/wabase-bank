@@ -1,0 +1,3 @@
+path: data/bank_account_by_client/{{client_id}}
+response:
+  id: <- account_id

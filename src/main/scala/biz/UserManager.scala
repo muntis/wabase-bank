@@ -49,11 +49,6 @@ class UserManager {
 }
 
 object UserManager {
-
-  def passwordHash(ctx: Map[String, Any]): String = {
-    Authentication.passwordHash(String.valueOf(ctx("pwd")))
-  }
-
   def authenticateUser(username: String, password: String, ip: String, userAgent: Option[String]): Future[Option[user_principal]] = {
     import app._
     val user = transaction {
