@@ -43,7 +43,7 @@ fields:
       - field api: readonly
 save:
   - password_expiration_date = now() + '90 days'::interval
-  - passwd = uniso.app.biz.UserManager.passwordHash
+  - passwd = org.wabase.Authentication.passwordHash :pwd
   - save this
 
 name: user_list_def_test
