@@ -120,27 +120,27 @@ order:
   - id
 
 name: bank_account_list_with_count
-table: account a
-api: manage_bank_clients list, manage_bank_clients count
+table:
+api: manage_bank_clients list
 comments: Returns list of page of bank accounts with total count
-joins:
-  - a [a.client_id = c.id] client c
 fields:
-  - id
-  - number
-  - balance
-  - currency
-  - type
-  - client_id
-  - date_created
-  - date_closed
-  - client_name = c.name || ' ' || c.surname
-filter:
-  - client_id
-order:
-  - client_name
-  - id
+  - count: int
+  - data *:
+    table: account a
+    fields:
+      - id
+      - number
+      - balance
+      - currency
+      - type
+      - client_id
+      - date_created
+      - date_closed
+    order:
+      - id
+    filter:
+      - client_id
 list:
-  - c: count this
-  - d: list  this
-  - return (count = :c) + (data = :d)
+  - count: count bank_account_list_with_count_data
+  - data:   list bank_account_list_with_count_data
+  - return this
