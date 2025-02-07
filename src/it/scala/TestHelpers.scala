@@ -1,6 +1,6 @@
 package uniso.app
 
-import akka.http.scaladsl.model.StatusCodes
+import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.mojoz.querease.ValidationResult
 import org.wabase.JsonConverterProvider
 import org.wabase.client.{ClientException, RestClient}

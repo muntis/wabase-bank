@@ -1,13 +1,13 @@
 package uniso.app
 
-import akka.http.scaladsl.model.HttpCharsets.`UTF-8`
-import akka.http.scaladsl.model.MediaTypes.`text/html`
-import akka.http.scaladsl.model.{ContentType, MediaTypes}
-import akka.http.scaladsl.server.Directive0
-import akka.http.scaladsl.server.Directives.pathPrefix
-import com.github.swagger.akka.SwaggerHttpService.readerConfig
-import com.github.swagger.akka.SwaggerHttpService
-import com.github.swagger.akka.model.Info
+import org.apache.pekko.http.scaladsl.model.HttpCharsets.`UTF-8`
+import org.apache.pekko.http.scaladsl.model.MediaTypes.`text/html`
+import org.apache.pekko.http.scaladsl.model.{ContentType, MediaTypes}
+import org.apache.pekko.http.scaladsl.server.Directive0
+import org.apache.pekko.http.scaladsl.server.Directives.pathPrefix
+import com.github.swagger.pekko.SwaggerHttpService.readerConfig
+import com.github.swagger.pekko.SwaggerHttpService
+import com.github.swagger.pekko.model.Info
 import org.mojoz.metadata.{FieldDef, ViewDef}
 import io.swagger.v3.jaxrs2.Reader
 import io.swagger.v3.oas.models.{Components, OpenAPI, Operation, PathItem, Paths}
@@ -160,6 +160,7 @@ object SwaggerDocService extends SwaggerHttpService{
 
     mediaType.setSchema(maybeArraySchema)
     content.addMediaType("application/json", mediaType)
+    content.addMediaType("text/plain", mediaType)
 
     content
   }
@@ -291,7 +292,7 @@ object SwaggerDocService extends SwaggerHttpService{
     val steps = viewDef.actions.get(action).map(_.steps).getOrElse(Nil)
     val res = steps.flatMap{
       case Validations(Some(name), _, _) => List(name)
-      case Evaluation(_, _, ViewCall(method, view, _)) if view != viewDef.name =>
+      case Evaluation(_, _, ViewCall(method, view, _), _) if view != viewDef.name =>
         org.wabase.DefaultAppQuerease.nameToViewDef.get(view).map(subView =>
           getErrorCodesForView(subView, method)
         ).getOrElse(Nil)

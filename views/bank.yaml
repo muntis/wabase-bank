@@ -170,3 +170,22 @@ get:
   - client_id = :id
   - unique_opt list bank_account_list
 
+name: request_account_closure
+table: account a
+api: manage_bank_clients update
+fields:
+  - id
+update:
+  - message = 'Account closure request received'
+  - status ok { :message }
+
+name: request_main_account_closure
+table: account a
+api: manage_bank_clients update
+fields:
+  - id
+update:
+  - session_cookie = extract cookie session-id
+  - res = http put {'/data/request_account_closure', :id} {:id id} {'Cookie',  'session-id=' || :session_cookie}
+  - status ok :res
+

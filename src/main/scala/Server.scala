@@ -1,8 +1,8 @@
 package uniso.app
 
-import akka.event.Logging
-import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.directives.DebuggingDirectives
+import org.apache.pekko.event.Logging
+import org.apache.pekko.http.scaladsl.Http
+import org.apache.pekko.http.scaladsl.server.directives.DebuggingDirectives
 import org.wabase.{Loggable, config}
 
 import scala.util._

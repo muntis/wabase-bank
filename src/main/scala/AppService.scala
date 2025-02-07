@@ -1,13 +1,13 @@
 package uniso.app
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.StatusCodes._
-import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers._
-import akka.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissing, CredentialsRejected}
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server._
-import akka.http.scaladsl.server.directives.AuthenticationDirective
+import org.apache.pekko.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import org.apache.pekko.http.scaladsl.model.StatusCodes._
+import org.apache.pekko.http.scaladsl.model._
+import org.apache.pekko.http.scaladsl.model.headers._
+import org.apache.pekko.http.scaladsl.server.AuthenticationFailedRejection.{CredentialsMissing, CredentialsRejected}
+import org.apache.pekko.http.scaladsl.server.Directives._
+import org.apache.pekko.http.scaladsl.server._
+import org.apache.pekko.http.scaladsl.server.directives.AuthenticationDirective
 import dto.user_principal
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.{ArraySchema, Content, Encoding, Schema}
@@ -59,7 +59,7 @@ object AppService
 
   override protected def initFileStreamer = App
 
-  override def initDeferredStorage = new DbDeferredStorage(appConfig, this, App, this)
+  override def initDeferredStorage = new DbDeferredStorage(appConfig, App, this)
 
   override def execution = uniso.app.execution
 

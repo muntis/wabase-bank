@@ -1,6 +1,6 @@
 package uniso
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import org.wabase.currentTime
 
 import scala.collection.immutable.{LazyList, Seq}

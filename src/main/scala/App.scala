@@ -1,9 +1,12 @@
 package uniso.app
 
+import org.apache.pekko.http.scaladsl.model.HttpRequest
+import org.apache.pekko.http.scaladsl.server.Route
 import dto.user_principal
-import org.wabase._
+import org.wabase.*
 import org.wabase.AppMetadata.{Action, AugmentedAppFieldDef}
-import org.tresql._
+import org.tresql.*
+import org.wabase.client.WabaseHttpClient
 
 import scala.concurrent.ExecutionContext
 
@@ -19,6 +22,12 @@ object App
 
   implicit val defaultCP: PoolName = DEFAULT_CP
   protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
+
+  val httpClient = new WabaseHttpClient{
+    override lazy val port = AppServer.port
+  }
+  override implicit lazy val httpClients: WabaseHttpClients =
+    WabaseHttpClients(Map("default" -> {inj => req => logger.debug("REQ: "+req); httpClient.doRequest(req: HttpRequest)}))
 
   override def toAuditableMap(user: user_principal): Map[String, Any] = Map(
     "id" -> user.id,
