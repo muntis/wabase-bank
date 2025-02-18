@@ -1,14 +1,15 @@
 package uniso.app
 
-import org.apache.pekko.http.scaladsl.model.HttpRequest
+import org.apache.pekko.http.scaladsl.model.{HttpEntity, HttpMessage, HttpRequest, HttpResponse}
 import org.apache.pekko.http.scaladsl.server.Route
 import dto.user_principal
 import org.wabase.*
 import org.wabase.AppMetadata.{Action, AugmentedAppFieldDef}
 import org.tresql.*
+import org.wabase.AppQuerease.InjectionParametersContext
 import org.wabase.client.WabaseHttpClient
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 object App
   extends AppBase[user_principal]
@@ -26,8 +27,38 @@ object App
   val httpClient = new WabaseHttpClient{
     override lazy val port = AppServer.port
   }
+
+  // Set of URIs that should be kept chunked
+  val longRequests: Set[String] = Set()
+  def toStrictEntity(req: HttpRequest): Future[HttpRequest] = {
+    import AppService._
+    val doToStrict = req.uri.path.isEmpty || !longRequests(req.uri.path.reverse.head.toString)
+    if(doToStrict){
+      val entity = req.entity.toStrict(httpClient.requestTimeout)
+      entity.map(e => req.withEntity(e))
+    }else Future.successful(req)
+  }
+
+  def messageToString(message: HttpMessage): String = {
+    val enitty = message.entity match {
+      case HttpEntity.Strict(_, data) => " Body: " + data.utf8String
+      case _ => " Streamed entity"
+    }
+    message.toString + "\n" + enitty
+  }
+
+  def log(client: HttpRequest => Future[HttpResponse])(inj: InjectionParametersContext)(req: HttpRequest): Future[HttpResponse] = {
+    import AppService._
+    for{
+      request <- toStrictEntity(req)
+      _ = logger.debug("HttpClient request: " + messageToString(request))
+      response <- client(req)
+      _ = logger.debug("HttpClient response: " + messageToString(response))
+    }yield response
+  }
+
   override implicit lazy val httpClients: WabaseHttpClients =
-    WabaseHttpClients(Map("default" -> {inj => req => logger.debug("REQ: "+req); httpClient.doRequest(req: HttpRequest)}))
+    WabaseHttpClients(Map("default" -> log(httpClient.doRequest)))
 
   override def toAuditableMap(user: user_principal): Map[String, Any] = Map(
     "id" -> user.id,
