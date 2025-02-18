@@ -52,7 +52,7 @@ object App
     for{
       request <- toStrictEntity(req)
       _ = logger.debug("HttpClient request: " + messageToString(request))
-      response <- client(req)
+      response <- client(request)
       _ = logger.debug("HttpClient response: " + messageToString(response))
     }yield response
   }
