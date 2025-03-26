@@ -22,7 +22,7 @@ object App
     with DbAccess {
 
   implicit val defaultCP: PoolName = DEFAULT_CP
-  protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
+  override protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
 
   val httpClient = new WabaseHttpClient{
     override lazy val port = AppServer.port
