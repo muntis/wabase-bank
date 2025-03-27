@@ -82,7 +82,7 @@ object AppService
   override def remoteAddressToString(ra: RemoteAddress): String = ra.toIP.map(_.ip.getHostAddress).orNull // FIXME to core
 
   case class LoginRequest(username: Option[String], password: Option[String])
-  implicit val loginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest)
+  implicit val loginRequestFormat: RootJsonFormat[LoginRequest] = jsonFormat2(LoginRequest.apply)
 
   override def signInUser: AuthenticationDirective[user_principal] = {
     val dr: Directive1[Option[user_principal]] = (entity(as[LoginRequest]) & extractClientIP.map(remoteAddressToString) & extractUserAgent).tflatMap {case (userInfo, ip, ua) =>
