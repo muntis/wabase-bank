@@ -4,7 +4,10 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should
 import spray.json._
 
-class AppServiceBaseSpecs extends AnyFlatSpec with should.Matchers with RunningServer{
+class AppServiceBaseSpecs extends AnyFlatSpec with should.Matchers with RunningServer with WithHttpClient{
+  final lazy val httpClient = initHttpClient
+  import httpClient._
+
   behavior of "AppServiceBase"
 
   it should "return api list" in {

@@ -2,16 +2,17 @@ package uniso.app
 
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.flatspec.AnyFlatSpec
-import org.wabase.{Dto, DtoWithId, TemplateUtil}
+import org.wabase.{Dto, DtoWithId, JsonConverter, Loggable, TemplateUtil, JsonConverterProvider}
 import org.scalatest.matchers.should.Matchers
 import org.tresql.Query
 import org.wabase.AppMetadata.AugmentedAppViewDef
-
-class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with BeforeAndAfterAll with TemplateUtil {
-  import App._
+// TODo CLEANUP, USE DataBaseSpecs
+class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with BeforeAndAfterAll with TemplateUtil with Loggable with WithHttpClient with JsonConverterProvider with org.wabase.QuereaseProvider{
+  final lazy val httpClient = initHttpClient
+  import httpClient._
 
   val ApplicationStateCookiePrefix = "current_"
-
+  override protected def initJsonConverter: JsonConverter[?] = qio
   override def resourcePath = "src/it/resources/"
 
   def defaultListParams = Map("query" -> "", "limit" -> 1)
@@ -35,7 +36,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
   )
 
   def views =
-    qe
+    App.qe
       .collectViews { case v => v }
       .toSeq
       .sortBy(_.name)
@@ -44,7 +45,7 @@ class DataSpecs extends AnyFlatSpec with Matchers with RunningServer with Before
   def listTest(clzz: Class[? <: Dto], name: String, params: Map[String, Any]): Unit = createListTest(clzz, name, false, params)
 
   views.foreach(view => {
-    val viewClass = qe.viewNameToClassMap(view.name)
+    val viewClass = App.qe.viewNameToClassMap(view.name)
     view.apiMethodToRoles.foreach({
       case ("list", _) if !excludeList.contains(view.name) =>
         createListTest(viewClass, null, view.apiMethodToRoles.contains("count"), defaultListParamsForClass.getOrElse(viewClass, Map.empty))

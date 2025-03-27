@@ -4,11 +4,8 @@ import org.wabase.BusinessScenariosBaseSpecs
 
 import scala.util.Random
 
-class BusinessScenariosSpecs extends BusinessScenariosBaseSpecs("business") with RunningServer {
-
-  override lazy val serverWsPath = s"ws://localhost:$port/services/ws"
-
-  override def deferredResultUri(hash: String) = s"services/deferred/$hash/result"
+class BusinessScenariosSpecs extends BusinessScenariosBaseSpecs("business") with RunningServer with WithHttpClient{
+  override def initHttpClient: org.wabase.client.WabaseHttpClient = super[WithHttpClient].initHttpClient
 
   val RandomDecimalNumberStringPattern = "randomDecimalNumberString\\((\\d*)\\)".r
   val RandomEmailPattern = "randomEmail"
