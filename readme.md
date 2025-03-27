@@ -94,6 +94,11 @@ To run automated tests:
 docker compose exec instance-api sbt test it:test
 ```
 
+To run single test:
+
+```shell
+docker compose exec instance-api sbt "it:testOnly uniso.app.DataSpecs"
+```
 
 # TODO 
 
