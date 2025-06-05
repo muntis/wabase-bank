@@ -1,4 +1,4 @@
-val wabaseVersion = "8.0.0-RC2-SNAPSHOT"
+val wabaseVersion = "8.0.0-RC3-SNAPSHOT"
 val jacksonVersion = "2.14.2"
 val swaggerVersion = "2.2.10"
 //val alpakkaVersion = "4.0.0"  // Ensure Apache-2.0 license
