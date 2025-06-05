@@ -1,14 +1,17 @@
 package uniso.app
 
-import org.apache.pekko.http.scaladsl.model.{HttpEntity, HttpMessage, HttpRequest, HttpResponse}
+import org.apache.pekko.http.scaladsl.model.{HttpEntity, HttpHeader, HttpMessage, HttpMethod, HttpMethods, HttpRequest, HttpResponse, MessageEntity}
 import org.apache.pekko.http.scaladsl.server.Route
 import dto.user_principal
+import org.apache.pekko.http.scaladsl.marshalling.Marshaller
+import org.apache.pekko.http.scaladsl.unmarshalling.FromResponseUnmarshaller
 import org.wabase.*
 import org.wabase.AppMetadata.{Action, AugmentedAppFieldDef}
 import org.tresql.*
 import org.wabase.AppQuerease.InjectionParametersContext
 import org.wabase.client.WabaseHttpClient
 
+import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, Future}
 
 object App
@@ -24,20 +27,38 @@ object App
   implicit val defaultCP: PoolName = DEFAULT_CP
   override protected def initQuerease: org.wabase.AppQuerease = org.wabase.DefaultAppQuerease
 
+  println("AppServer.port === " + AppServer.port)
   val httpClient = new WabaseHttpClient{
     override lazy val port = AppServer.port
+    override lazy val serverPath = s"http://localhost:$port/"
+
+    // TODO to show examples with service calls should make
+    // some services where there is different auth methdod
+    override def login(username: String, password: String): String = {
+      httpPostAwait[Map[String, Any], String](HttpMethods.POST, "api/login", Map("username" -> username, "password" -> password))
+    }
+    def isLoginRequest(req: HttpRequest) =
+      req.uri.toString.endsWith("api/login") || req.uri.toString.endsWith("api/current_user")
+
+    def serviceCallCookieMap = {
+      println("LOGIN")
+      login("admin@localhost", "admin")
+      println("LOGIN DONE")
+      getCookieStorage
+    }
+
+
+    override def doRequest(req: HttpRequest, cookieStorage: CookieMap, timeout: FiniteDuration, maxRedirects: Int): Future[HttpResponse] = {
+      println("DO REQUEST ====")
+      println(req)
+      println(isLoginRequest(req))
+      println("DO REQUEST -----")
+      super.doRequest(req, if (isLoginRequest(req)) cookieStorage else serviceCallCookieMap, timeout, maxRedirects)
+    }
   }
 
-  // Set of URIs that should be kept chunked
-  val longRequests: Set[String] = Set()
-  def toStrictEntity(req: HttpRequest): Future[HttpRequest] = {
-    import AppService._
-    val doToStrict = req.uri.path.isEmpty || !longRequests(req.uri.path.reverse.head.toString)
-    if(doToStrict){
-      val entity = req.entity.toStrict(httpClient.requestTimeout)
-      entity.map(e => req.withEntity(e))
-    }else Future.successful(req)
-  }
+  println("AppServer.httpClient.port === " + httpClient.port)
+  println("AppServer.httpClient.serverPath === " + httpClient.serverPath)
 
   def messageToString(message: HttpMessage): String = {
     val enitty = message.entity match {
@@ -50,9 +71,9 @@ object App
   def log(client: HttpRequest => Future[HttpResponse])(inj: InjectionParametersContext)(req: HttpRequest): Future[HttpResponse] = {
     import AppService._
     for{
-      request <- toStrictEntity(req)
+      request <- Future.successful(req)
       _ = logger.debug("HttpClient request: " + messageToString(request))
-      response <- client(request)
+      response <- client(req)
       _ = logger.debug("HttpClient response: " + messageToString(response))
     }yield response
   }

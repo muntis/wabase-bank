@@ -179,13 +179,22 @@ update:
   - message = 'Account closure request received'
   - status ok { :message }
 
+name: request_account_closure_internal
+table: account a
+api: manage_bank_clients update
+fields:
+  - id
+  - message =
+update:
+  - message = 'Account closure request received'
+  - return (message = :message)
+
 name: request_main_account_closure
 table: account a
 api: manage_bank_clients update
 fields:
   - id
 update:
-  - session_cookie = extract cookie session-id
-  - res = http put {'/data/request_account_closure', :id} {:id id} {'Cookie',  'session-id=' || :session_cookie}
+  - res = http put {'/data/request_account_closure_internal', :id} unique {:id id}
   - status ok :res
 
